@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberpunk 2077 — Quest Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD700;
+    --cyan: #00F5FF;
+    --red: #FF003C;
+    --dark: #050A0F;
+    --dark2: #0A1018;
+    --dark3: #0F1820;
+    --panel: #0D1822;
+    --border: #1A2E42;
+    --text: #C8D8E8;
+    --muted: #4A6880;
+    --green: #00FF88;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,245,255,0.01) 2px, rgba(0,245,255,0.01) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scanline {
+    position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+    background: rgba(0,245,255,0.08);
+    animation: scanline 6s linear infinite;
+    pointer-events: none; z-index: 999;
+  }
+  @keyframes scanline { 0% { top: -4px; } 100% { top: 100vh; } }
+
+  header {
+    position: relative;
+    padding: 32px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(0,245,255,0.04) 0%, transparent 100%);
+    overflow: hidden;
+  }
+  header::after {
+    content: 'V';
+    position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 120px; font-weight: 700;
+    color: rgba(0,245,255,0.04);
+    line-height: 1;
+  }
+
+  .header-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(255,215,0,0.4);
+  }
+
+  h1 span { color: var(--cyan); }
+
+  .header-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  .progress-bar-wrap {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--yellow));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    white-space: nowrap;
+  }
+
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .filter-btn.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,215,0,0.06); }
+
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-left: 3px solid var(--cyan);
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .section-header:hover { background: rgba(0,245,255,0.05); }
+
+  .section-header.act-main { border-left-color: var(--yellow); }
+  .section-header.act-side { border-left-color: var(--cyan); }
+  .section-header.act-warning { border-left-color: var(--red); }
+  .section-header.act-dlc { border-left-color: #B060FF; }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    flex: 1;
+  }
+  .section-header.act-main .section-title { color: var(--yellow); }
+  .section-header.act-side .section-title { color: var(--cyan); }
+  .section-header.act-warning .section-title { color: var(--red); }
+  .section-header.act-dlc .section-title { color: #B060FF; }
+
+  .section-count {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .section-toggle {
+    font-size: 11px;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .section-toggle.open { transform: rotate(90deg); }
+
+  .quest-list {
+    display: none;
+  }
+  .quest-list.open { display: block; }
+
+  .quest-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 16px 10px 20px;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid rgba(26,46,66,0.4);
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .quest-item:hover { background: rgba(0,245,255,0.03); }
+  .quest-item.done { opacity: 0.45; }
+  .quest-item.done .quest-name { text-decoration: line-through; text-decoration-color: var(--muted); }
+
+  .quest-item.type-main { border-left-color: rgba(255,215,0,0.3); }
+  .quest-item.type-main:hover { border-left-color: var(--yellow); background: rgba(255,215,0,0.03); }
+  .quest-item.type-side { border-left-color: rgba(0,245,255,0.2); }
+  .quest-item.type-side:hover { border-left-color: var(--cyan); }
+  .quest-item.type-warning { border-left-color: rgba(255,0,60,0.4); background: rgba(255,0,60,0.03); }
+  .quest-item.type-dlc { border-left-color: rgba(176,96,255,0.3); }
+  .quest-item.type-dlc:hover { border-left-color: #B060FF; background: rgba(176,96,255,0.03); }
+
+  .quest-check {
+    width: 16px; height: 16px;
+    border: 1px solid var(--muted);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .quest-item.done .quest-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .quest-item.done .quest-check::after {
+    content: '✓';
+    color: #000;
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .quest-info { flex: 1; min-width: 0; }
+  .quest-name {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .quest-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-weight: 400;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .quest-note.important {
+    color: var(--red);
+  }
+  .quest-note.tip {
+    color: var(--cyan);
+  }
+  .quest-note.unlock {
+    color: #FFB800;
+  }
+
+  .badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+  .badge-main { background: rgba(255,215,0,0.15); color: var(--yellow); border: 1px solid rgba(255,215,0,0.3); }
+  .badge-side { background: rgba(0,245,255,0.1); color: var(--cyan); border: 1px solid rgba(0,245,255,0.2); }
+  .badge-key { background: rgba(255,0,60,0.15); color: var(--red); border: 1px solid rgba(255,0,60,0.3); }
+  .badge-dlc { background: rgba(176,96,255,0.15); color: #B060FF; border: 1px solid rgba(176,96,255,0.3); }
+
+  .warning-box {
+    border: 1px solid var(--red);
+    background: rgba(255,0,60,0.07);
+    padding: 14px 16px;
+    margin: 4px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .warning-icon { font-size: 20px; flex-shrink: 0; }
+  .warning-text { font-size: 13px; line-height: 1.5; }
+  .warning-text strong { color: var(--red); font-family: 'Rajdhani', sans-serif; font-size: 15px; letter-spacing: 1px; }
+
+  .reset-btn {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    padding: 10px 18px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .lifepath-note {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .lifepath-note strong { color: var(--yellow); }
+
+  .stats-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .stats-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+  }
+  .stats-header:hover { background: rgba(0,245,255,0.03); }
+  .stats-title { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+  .stats-toggle { font-size: 10px; color: var(--muted); transition: transform 0.2s; }
+  .stats-toggle.open { transform: rotate(90deg); }
+  .stats-body { display: none; padding: 16px; }
+  .stats-body.open { display: block; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--dark3); border: 1px solid var(--border); padding: 12px; text-align: center; }
+  .stat-value { font-family: 'Share Tech Mono', monospace; font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .stat-card.c-total .stat-value { color: var(--text); }
+  .stat-card.c-done .stat-value { color: var(--green); }
+  .stat-card.c-left .stat-value { color: var(--yellow); }
+  .stat-card.c-pct .stat-value { color: var(--cyan); }
+
+  .chart-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
+  .category-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+  .cat-name { font-size: 11px; font-weight: 600; width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+  .cat-bar-wrap { flex: 1; height: 13px; background: var(--dark); border: 1px solid var(--border); overflow: hidden; }
+  .cat-bar-fill { height: 100%; transition: width 0.5s ease; }
+  .cat-count { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--muted); width: 52px; text-align: right; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<header>
+  <div class="header-tag">// NEURAL INTERFACE v2.1 — QUEST TRACKER</div>
+  <h1>CYBERPUNK <span>2077</span></h1>
+  <div class="header-sub">Complete Quest Order Guide — Base Game + Phantom Liberty</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 0</div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all')">All</button>
+    <button class="filter-btn" onclick="setFilter('main')">Main Only</button>
+    <button class="filter-btn" onclick="setFilter('side')">Side Only</button>
+    <button class="filter-btn" onclick="setFilter('key')">Key for Endings</button>
+    <button class="filter-btn" onclick="setFilter('undone')">Undone</button>
+    <button class="filter-btn" onclick="setFilter('done')">Completed</button>
+  </div>
+
+  <div class="stats-panel">
+    <div class="stats-header" onclick="toggleStats()">
+      <span class="stats-title">// Completion Stats</span>
+      <span class="stats-toggle" id="statsToggle">▶</span>
+    </div>
+    <div class="stats-body" id="statsBody">
+      <div class="stats-grid">
+        <div class="stat-card c-total"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total Quests</div></div>
+        <div class="stat-card c-done"><div class="stat-value" id="statDone">0</div><div class="stat-label">Completed</div></div>
+        <div class="stat-card c-left"><div class="stat-value" id="statLeft">0</div><div class="stat-label">Remaining</div></div>
+        <div class="stat-card c-pct"><div class="stat-value" id="statPct">0%</div><div class="stat-label">Overall %</div></div>
+      </div>
+      <div class="chart-label">// completion by category</div>
+      <div id="categoryChart"></div>
+    </div>
+  </div>
+
+  <div class="lifepath-note">
+    <strong>⚡ LIFEPATH NOTE:</strong> Your prologue quest depends on your lifepath choice — <strong>Nomad</strong> (The Nomad), <strong>Street Kid</strong> (The Streetkid), or <strong>Corpo</strong> (The Corpo-Rat). All three lead to the same Act 1 quest: <strong>The Rescue</strong>.
+  </div>
+
+  <div id="questContainer"></div>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">⟳ Reset All</button>
+
+<script>
+const sections = [
+  {
+    id: 'prologue',
+    title: '① PROLOGUE — 2076',
+    type: 'act-main',
+    quests: [
+      { name: 'The Nomad / The Streetkid / The Corpo-Rat', type: 'main', note: 'Only one plays — depends on your lifepath choice', badge: 'main' },
+      { name: 'The Rescue', type: 'main', note: 'First shared quest for all lifepaths — meet Jackie Welles', badge: 'main' },
+    ]
+  },
+  {
+    id: 'act1',
+    title: '② ACT 1 — THE HEIST',
+    type: 'act-main',
+    quests: [
+      { name: 'The Ripperdoc', type: 'main', badge: 'main' },
+      { name: 'The Ride', type: 'main', badge: 'main' },
+      { name: 'The Pickup', type: 'main', note: 'TIP: Side with Militech → unlocks Meredith Stout romance later', badge: 'main' },
+      { name: 'The Information', type: 'main', badge: 'main' },
+      { name: 'The Heist', type: 'main', note: 'Major story turning point — brings in Johnny Silverhand', badge: 'main' },
+    ]
+  },
+  {
+    id: 'interlude',
+    title: '③ INTERLUDE — NEVER FADE AWAY',
+    type: 'act-main',
+    quests: [
+      { name: 'Love Like Fire', type: 'main', note: 'Played as Johnny in 2023 — inventory/map unavailable', badge: 'main' },
+    ]
+  },
+  {
+    id: 'act2open',
+    title: '④ ACT 2 — OPENING',
+    type: 'act-main',
+    quests: [
+      { name: 'Playing for Time', type: 'main', note: 'Unlocks all Act 2 quest branches simultaneously', badge: 'main' },
+    ]
+  },
+  {
+    id: 'act2judy',
+    title: '⑤ ACT 2 — JUDY\'S QUESTLINE (Do First)',
+    type: 'act-side',
+    quests: [
+      { name: 'Automatic Love', type: 'main', note: 'Main quest — visit Clouds, starts Judy + Voodoo Boys thread', badge: 'main' },
+      { name: 'The Space In Between', type: 'main', badge: 'main' },
+      { name: 'Disasterpiece', type: 'main', badge: 'main' },
+      { name: 'Double Life', type: 'main', note: 'Unlocks Voodoo Boys questline', badge: 'main' },
+      { name: 'Both Sides, Now', type: 'side', note: '★ Judy side quest #1 — Support her ideas throughout', badge: 'side' },
+      { name: 'Ex-Factor', type: 'side', note: '★ Judy side quest #2', badge: 'side' },
+      { name: "Talkin' 'Bout a Revolution", type: 'side', note: '★ Judy side quest #3', badge: 'side' },
+      { name: 'Pisces', type: 'side', note: '★ Judy side quest #4 — Choice at end affects relationship', badge: 'side' },
+      { name: 'Pyramid Song', type: 'side', note: '★ KEY: Romance Judy here + unlocks her apartment safehouse', badge: 'key' },
+    ]
+  },
+  {
+    id: 'act2voodoo',
+    title: '⑥ ACT 2 — VOODOO BOYS (Unlocks Phantom Liberty)',
+    type: 'act-main',
+    quests: [
+      { name: "M'ap Tann Pelen", type: 'main', note: 'Meet Placide in Pacifica', badge: 'main' },
+      { name: 'I Walk the Line', type: 'main', note: 'Take down the Animals in Grand Imperial Mall', badge: 'main' },
+      { name: 'Never Fade Away', type: 'main', note: 'Part of Transmission — learn Alt Cunningham\'s fate', badge: 'main' },
+      { name: 'Transmission', type: 'main', note: '★ KEY: Meet Brigitte + contact Alt. Phantom Liberty now available!', badge: 'key' },
+    ]
+  },
+  {
+    id: 'phantom',
+    title: '⑦ PHANTOM LIBERTY DLC (Unlocked Here — Do Now)',
+    type: 'act-dlc',
+    quests: [
+      { name: 'Phantom Liberty', type: 'dlc', note: 'Start point: get a call from Songbird after Transmission. Go to Dogtown.', badge: 'dlc' },
+      { name: 'Dog Eat Dog', type: 'dlc', badge: 'dlc' },
+      { name: 'Hole in the Sky', type: 'dlc', badge: 'dlc' },
+      { name: 'Lucretia My Reflection', type: 'dlc', badge: 'dlc' },
+      { name: 'The Damned', type: 'dlc', badge: 'dlc' },
+      { name: 'You Know My Name', type: 'dlc', badge: 'dlc' },
+      { name: 'Spider and the Fly', type: 'dlc', badge: 'dlc' },
+      { name: 'Firestarter', type: 'dlc', note: '⚠ BRANCH POINT: Side with Reed → Path A | Side with Songbird → Path B', badge: 'dlc' },
+      { name: '[Path A] Somewhat Damaged → Leave in Silence → Four Score and Seven → Who Wants to Live Forever → Things Done Changed', type: 'dlc', note: '(Reed path — unlocks unique Phantom Liberty ending)', badge: 'dlc' },
+      { name: '[Path B] Black Steel in the Hour of Chaos → Unfinished Sympathy → Through Pain to Heaven', type: 'dlc', note: "(Songbird path)", badge: 'dlc' },
+      { name: 'TIP: After Firestarter you can leave Dogtown freely — come back to finish later', type: 'dlc', note: 'Weave between DLC and base game quests below as you like', badge: 'dlc' },
+    ]
+  },
+  {
+    id: 'act2panam',
+    title: '⑧ ACT 2 — PANAM\'S QUESTLINE (Required for Nomad Ending)',
+    type: 'act-side',
+    quests: [
+      { name: 'Ghost Town', type: 'main', note: 'Main quest — meet Rogue at Afterlife, capture Hellman', badge: 'main' },
+      { name: 'Lightning Breaks', type: 'main', note: 'Panam & V take down Hellman\'s transport', badge: 'main' },
+      { name: 'Life During Wartime', type: 'main', note: 'Find Hellman at crash site with Aldecados', badge: 'main' },
+      { name: 'Riders on the Storm', type: 'side', note: '★ Panam side quest #1', badge: 'side' },
+      { name: 'With a Little Help from My Friends', type: 'side', note: '★ Panam side quest #2', badge: 'side' },
+      { name: 'Queen of the Highway', type: 'side', note: '★ KEY: Romance + unlocks Nomad ending + Aldecado safehouse', badge: 'key' },
+    ]
+  },
+  {
+    id: 'act2takemura',
+    title: '⑨ ACT 2 — TAKEMURA\'S QUESTLINE (Required for Arasaka Ending)',
+    type: 'act-side',
+    quests: [
+      { name: 'Down on the Street', type: 'main', badge: 'main' },
+      { name: 'Gimme Danger', type: 'main', note: 'TIP: Go with Takemura — bonus infiltration mission', badge: 'main' },
+      { name: 'Play It Safe', type: 'main', note: 'Defeat 3 snipers + boss fight against Oda', badge: 'main' },
+      { name: 'Search and Destroy', type: 'main', note: '⚠ SAVE TAKEMURA — required for the Devil ending!', badge: 'key' },
+    ]
+  },
+  {
+    id: 'act2river',
+    title: '⑩ ACT 2 — RIVER\'S QUESTLINE',
+    type: 'act-side',
+    quests: [
+      { name: 'I Fought the Law', type: 'side', note: 'Unlocks after Ghost Town + raising Heywood/City Center/Westbrook Street Cred', badge: 'side' },
+      { name: 'The Hunt', type: 'side', note: 'Help River find his nephew Randy — save Randy for romance option', badge: 'side' },
+      { name: 'Following the River', type: 'side', note: '★ Romance River here (feminine V only)', badge: 'side' },
+    ]
+  },
+  {
+    id: 'act2johnny',
+    title: '⑪ ACT 2 — JOHNNY / ROGUE QUESTLINE (Required for Sun Ending)',
+    type: 'act-side',
+    quests: [
+      { name: 'Tapeworm', type: 'main', note: 'Auto-triggers after completing the 3 main quest branches', badge: 'main' },
+      { name: "Chippin' In", type: 'side', note: '★ KEY: Unlocks after Automatic Love + Life During Wartime + Transmission + Search and Destroy', badge: 'key' },
+      { name: 'Blistering Love', type: 'side', note: '★ Rogue date — required for the Sun ending path', badge: 'key' },
+    ]
+  },
+  {
+    id: 'act2kerry',
+    title: '⑫ ACT 2 — KERRY\'S QUESTLINE (Boosts Johnny Relationship %)',
+    type: 'act-side',
+    quests: [
+      { name: "Holdin' On", type: 'side', note: "Unlocks after Chippin' In", badge: 'side' },
+      { name: 'Second Conflict', type: 'side', badge: 'side' },
+      { name: 'A Like Supreme', type: 'side', badge: 'side' },
+      { name: "Rebel! Rebel!", type: 'side', badge: 'side' },
+      { name: "I Don't Wanna Hear It", type: 'side', note: 'TIP: Do NOT threaten the band — unlocks next quest', badge: 'side' },
+      { name: 'Off the Leash', type: 'side', note: '★ Romance Kerry here (masculine V only)', badge: 'side' },
+      { name: 'Boat Drinks', type: 'side', note: '★ Kiss Kerry + "Pencil me in" to solidify romance', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_earlyact2',
+    title: '🟡 OPTIONAL — Early Act 2 Side Quests',
+    type: 'act-side',
+    quests: [
+      { name: 'Happy Together', type: 'side', note: '⚠ MISSABLE: Talk to Barry before 3 in-game days pass or he dies. Check on your neighbor.', badge: 'side' },
+      { name: 'Heroes', type: 'side', note: 'Jackie\'s memorial — visit his family in Heywood. Missable if ignored long.', badge: 'side' },
+      { name: 'The Gig', type: 'side', note: 'Short intro quest — unlock Rogue at the Afterlife bar', badge: 'side' },
+      { name: 'Bullets', type: 'side', note: 'Meet Goro Takemura at Wakako\'s — required to start his questline', badge: 'side' },
+      { name: 'Human Nature', type: 'side', note: 'Short quest from Delamain taxi service — starts the Epistrophy chain', badge: 'side' },
+      { name: 'Full Disclosure', type: 'side', note: 'Help Sandra Dorsett\'s sister after the Prologue rescue', badge: 'side' },
+      { name: 'Paid in Full', type: 'side', note: 'Pay off your debt to Viktor — required to unlock The Gun', badge: 'side' },
+      { name: 'The Gun', type: 'side', note: 'Recover Viktor\'s iconic gun — unlocks after Paid in Full', badge: 'side' },
+      { name: 'War Pigs', type: 'side', note: '(Corpo lifepath exclusive) — confront your old Arasaka handler', badge: 'side' },
+      { name: 'These Boots Are Made For Walkin\'', type: 'side', note: '(Nomad lifepath exclusive) — recover your old car', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_epistrophy',
+    title: '🟡 OPTIONAL — Epistrophy (Delamain Taxi Chain)',
+    type: 'act-side',
+    quests: [
+      { name: 'Epistrophy: Badlands', type: 'side', note: 'Find rogue Delamain cab in the Badlands', badge: 'side' },
+      { name: 'Epistrophy: Coastview', type: 'side', badge: 'side' },
+      { name: 'Epistrophy: The Glen', type: 'side', badge: 'side' },
+      { name: 'Epistrophy: North Oak', type: 'side', badge: 'side' },
+      { name: 'Epistrophy: Northside', type: 'side', badge: 'side' },
+      { name: 'Epistrophy: Rancho Coronado', type: 'side', badge: 'side' },
+      { name: 'Epistrophy: Wellsprings', type: 'side', badge: 'side' },
+      { name: 'Epistrophy (Final)', type: 'side', note: 'Unlocks after collecting all 7 cabs — decide Delamain\'s fate', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_beatbrat',
+    title: '🟡 OPTIONAL — Beat on the Brat (Boxing Chain)',
+    type: 'act-side',
+    quests: [
+      { name: 'Beat on the Brat', type: 'side', note: 'Starter quest from Coach Fred — unlocks all bouts', badge: 'side' },
+      { name: 'Beat on the Brat: Kabuki', type: 'side', badge: 'side' },
+      { name: 'Beat on the Brat: Arroyo', type: 'side', badge: 'side' },
+      { name: 'Beat on the Brat: The Glen', type: 'side', badge: 'side' },
+      { name: 'Beat on the Brat: Rancho Coronado', type: 'side', badge: 'side' },
+      { name: 'Beat on the Brat: Pacifica', type: 'side', badge: 'side' },
+      { name: 'Beat on the Brat: Championship', type: 'side', note: 'Final bout — unlocks after beating all 5 fighters', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_beastinme',
+    title: '🟡 OPTIONAL — The Beast in Me (Street Racing Chain)',
+    type: 'act-side',
+    quests: [
+      { name: 'Tune Up', type: 'side', note: 'Help Claire with her truck — do this first before the race chain', badge: 'side' },
+      { name: 'The Beast in Me', type: 'side', note: 'Meet Claire at Afterlife — starts racing questline', badge: 'side' },
+      { name: 'The Beast in Me: City Center', type: 'side', badge: 'side' },
+      { name: 'The Beast in Me: Badlands', type: 'side', badge: 'side' },
+      { name: 'The Beast in Me: Santo Domingo', type: 'side', badge: 'side' },
+      { name: 'The Beast in Me: The Big Race', type: 'side', note: 'Final race — let Claire get revenge or stop her', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_sinnerman',
+    title: '🟡 OPTIONAL — Sinnerman Chain',
+    type: 'act-side',
+    quests: [
+      { name: 'Sinnerman', type: 'side', note: '⚠ Do NOT kill the prisoner early — let it play out for the full chain', badge: 'side' },
+      { name: 'There is a Light That Never Goes Out', type: 'side', note: 'Continuation — Joshua crucifixion questline', badge: 'side' },
+      { name: 'They Won\'t Go When I Go', type: 'side', note: 'Final quest in the Sinnerman chain', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_misc_notable',
+    title: '🟡 OPTIONAL — All Other Side Quests',
+    type: 'act-side',
+    quests: [
+      { name: 'Dream On', type: 'side', note: 'Help Jefferson Peralez — conspiracy mystery in Charter Hill', badge: 'side' },
+      { name: 'Killing in the Name', type: 'side', note: 'Help Barry find who\'s behind the net propaganda', badge: 'side' },
+      { name: 'Space Oddity', type: 'side', note: '★ Reward: Porsche 911 Turbo — follow the con artist chain', badge: 'side' },
+      { name: 'Sweet Dreams', type: 'side', note: '⚠ MISSABLE trap quest — bring a weapon, you will need it', badge: 'side' },
+      { name: 'Stairway to Heaven', type: 'side', note: 'Continuation of Sweet Dreams', badge: 'side' },
+      { name: 'Spellbound', type: 'side', note: 'Help Nix the netrunner at the Afterlife', badge: 'side' },
+      { name: 'Poem of the Atoms', type: 'side', note: 'Continuation of Spellbound — find Nix\'s stolen book', badge: 'side' },
+      { name: 'Kold Mirage', type: 'side', note: 'Find Alt Cunningham\'s construct — unlock after Transmission', badge: 'side' },
+      { name: 'Fool on the Hill', type: 'side', note: 'Meet the fortune teller in the Badlands', badge: 'side' },
+      { name: 'Violence', type: 'side', note: 'Help Kerry Eurodyne with a song — starts early Kerry chain', badge: 'side' },
+      { name: 'Imagine', type: 'side', note: 'Follow up to Violence — locate the missing singer', badge: 'side' },
+      { name: 'Stadium Love', type: 'side', note: 'Shooting gallery challenge at EBM Petrochem Stadium', badge: 'side' },
+      { name: 'Shoot to Thrill', type: 'side', note: 'Shooting range challenge in Watson', badge: 'side' },
+      { name: 'Small Man, Big Mouth', type: 'side', note: 'Beat up a provocateur for Wakako Okada', badge: 'side' },
+      { name: 'Big in Japan', type: 'side', note: 'Help a Corpo employee escape — surprising twist', badge: 'side' },
+      { name: 'Coin Operated Boy', type: 'side', note: 'Investigate a missing sexbot — comedic quest in Japantown', badge: 'side' },
+      { name: 'Machine Gun', type: 'side', note: 'Help Pepe at the food stand in Heywood', badge: 'side' },
+      { name: 'Gun Music', type: 'side', note: 'Help a guitarist named El Capitan in Heywood', badge: 'side' },
+      { name: 'Raymond Chandler Evening', type: 'side', note: 'Help a detective in Watson — noir mystery', badge: 'side' },
+      { name: 'Burning Desire / Night Moves', type: 'side', note: '⚠ MISSABLE: Complete before Double Life or this disappears', badge: 'side' },
+      { name: 'Love Rollercoaster', type: 'side', note: '⚠ MISSABLE: Activate the rollercoaster in Pacifica BEFORE Double Life', badge: 'side' },
+      { name: 'A Day in the Life', type: 'side', note: 'Help a man in Kabuki — short slice-of-life quest', badge: 'side' },
+      { name: 'A Cool Metal Fire', type: 'side', note: 'Help a grieving father in Watson — involves a cyberpsycho', badge: 'side' },
+      { name: 'The Highwayman', type: 'side', note: '★ Reward: iconic motorcycle — find the garage in Rancho Coronado', badge: 'side' },
+      { name: 'Fortunate Son', type: 'side', note: 'Help a Valentinos member in Heywood', badge: 'side' },
+      { name: 'Only Pain', type: 'side', note: 'Follow up to Fortunate Son', badge: 'side' },
+      { name: 'Losing My Religion / Sacrum Profanum', type: 'side', note: 'Help a monk in the Badlands — two-part chain', badge: 'side' },
+      { name: 'Meetings Along the Edge', type: 'side', note: 'Continuation of Sacrum Profanum', badge: 'side' },
+      { name: 'Send in the Clowns', type: 'side', note: 'Help an ex-Bozos clown near Santo Domingo', badge: 'side' },
+      { name: 'I\'ll Fly Away', type: 'side', note: 'Short emotional quest about a Nomad family in the Badlands', badge: 'side' },
+      { name: 'Ezekiel Saw the Wheel', type: 'side', note: 'Panam-adjacent — help Mitch at the Aldecados camp', badge: 'side' },
+      { name: 'Sex on Wheels', type: 'side', note: 'Recover a stolen car for Wakako', badge: 'side' },
+      { name: 'The Prophet\'s Song', type: 'side', note: 'Help a street preacher in Pacifica', badge: 'side' },
+      { name: 'Every Breath You Take', type: 'side', note: 'Help Judy\'s friend in the Glen', badge: 'side' },
+      { name: 'The Gift', type: 'side', note: 'Receive a mystery package from an unknown sender', badge: 'side' },
+      { name: 'Venus in Furs', type: 'side', note: 'Help a doll in Clouds — unlocks after Automatic Love', badge: 'side' },
+      { name: 'Psycho Killer', type: 'side', note: 'From Regina Jones — track down all 17 Cyberpsychos across Night City', badge: 'side' },
+    ]
+  },
+  {
+    id: 'opt_pl_side',
+    title: '🟣 OPTIONAL — Phantom Liberty Side Quests (Do During / After DLC)',
+    type: 'act-dlc',
+    quests: [
+      { name: 'Baby Let Me Take You', type: 'dlc', note: 'Help a man find his kidnapped partner in Dogtown', badge: 'dlc' },
+      { name: 'Dazed and Confused', type: 'dlc', note: 'Rescue a confused merc in Dogtown', badge: 'dlc' },
+      { name: 'Dirty Second Hands', type: 'dlc', note: 'Arms deal gone wrong in the stadium', badge: 'dlc' },
+      { name: 'Balls to the Wall', type: 'dlc', note: 'Help a desperate man retrieve stolen goods', badge: 'dlc' },
+      { name: 'Hi Ho Silver Lining', type: 'dlc', note: 'Fight club quest in Dogtown', badge: 'dlc' },
+      { name: 'Just Another Story', type: 'dlc', note: 'Help a journalist uncover a story in Dogtown', badge: 'dlc' },
+      { name: 'Money for Nothing', type: 'dlc', note: 'Scam operation — follow the money trail', badge: 'dlc' },
+      { name: 'Moving Heat', type: 'dlc', note: 'Help transport a dangerous package through Dogtown', badge: 'dlc' },
+      { name: 'New Person, Same Old Mistakes', type: 'dlc', note: 'Help a rogue AI in Dogtown — emotional quest', badge: 'dlc' },
+      { name: 'No Easy Way Out', type: 'dlc', note: 'Help an underground fighter escape their contract', badge: 'dlc' },
+      { name: 'Push It to the Limit', type: 'dlc', note: 'Racing quest in Dogtown with Mr. Hands', badge: 'dlc' },
+      { name: 'Shot By Both Sides', type: 'dlc', note: 'Political intrigue involving rival factions in Dogtown', badge: 'dlc' },
+    ]
+  },
+  {
+    id: 'ponr',
+    title: '⚠ POINT OF NO RETURN — DO EVERYTHING ABOVE FIRST',
+    type: 'act-warning',
+    quests: [
+      { name: '🔴 Nocturne Op55N1 (THE POINT OF NO RETURN)', type: 'warning', note: 'CRITICAL: Once you enter Embers restaurant elevator, ALL unfinished side quests FAIL permanently. Save beforehand!', badge: 'key' },
+    ]
+  },
+  {
+    id: 'act3johnny',
+    title: '⑬ ACT 3 — ENDING: THE SUN (Johnny + Rogue)',
+    type: 'act-main',
+    quests: [
+      { name: 'For Whom the Bell Tolls', type: 'main', note: 'REQUIRES: Chippin\' In + Blistering Love + 60% Johnny relationship', badge: 'main' },
+      { name: "Knockin' On Heaven's Door", type: 'main', badge: 'main' },
+      { name: 'New Dawn Fades', type: 'main', note: '🏁 ENDING', badge: 'main' },
+    ]
+  },
+  {
+    id: 'act3panam',
+    title: '⑬ ACT 3 — ENDING: ALL ALONG THE WATCHTOWER (Panam + Aldecados)',
+    type: 'act-main',
+    quests: [
+      { name: 'We Gotta Live Together', type: 'main', note: 'REQUIRES: Queen of the Highway completed', badge: 'main' },
+      { name: 'Forward to Death', type: 'main', badge: 'main' },
+      { name: 'Belly of the Beast', type: 'main', badge: 'main' },
+      { name: 'All Along the Watchtower', type: 'main', note: '🏁 ENDING', badge: 'main' },
+    ]
+  },
+  {
+    id: 'act3takemura',
+    title: '⑬ ACT 3 — ENDING: WHERE IS MY MIND? (Arasaka / Hanako)',
+    type: 'act-main',
+    quests: [
+      { name: 'Last Caress', type: 'main', note: 'REQUIRES: Search and Destroy + saved Takemura', badge: 'main' },
+      { name: 'Totalimmortal', type: 'main', badge: 'main' },
+      { name: 'Where Is My Mind?', type: 'main', note: '🏁 ENDING', badge: 'main' },
+    ]
+  },
+  {
+    id: 'act3alone',
+    title: '⑬ ACT 3 — ENDING: PATH OF GLORY (Solo / No Allies)',
+    type: 'act-main',
+    quests: [
+      { name: 'Path of Glory', type: 'main', note: '🏁 ENDING — Secret ending. No questline requirements!', badge: 'main' },
+    ]
+  },
+
+];
+
+let completed = JSON.parse(localStorage.getItem('cp77_completed') || '{}');
+let currentFilter = 'all';
+
+function getQuestId(sectionId, idx) {
+  return `${sectionId}_${idx}`;
+}
+
+function toggleStats() {
+  const body = document.getElementById('statsBody');
+  const tog = document.getElementById('statsToggle');
+  body.classList.toggle('open');
+  tog.classList.toggle('open');
+}
+
+const categoryDefs = [
+  { label: 'Main Story',       color: '#FFD700', match: (s) => ['prologue','act1','interlude','act2open','act2voodoo','act2open'].includes(s.id) || (s.type === 'act-main' && !s.id.startsWith('act3') && !s.id.startsWith('opt')) },
+  { label: 'Judy Questline',   color: '#00F5FF', match: (s) => s.id === 'act2judy' },
+  { label: 'Panam Questline',  color: '#00E676', match: (s) => s.id === 'act2panam' },
+  { label: 'Takemura Line',    color: '#FF6D00', match: (s) => s.id === 'act2takemura' },
+  { label: 'River Questline',  color: '#69F0AE', match: (s) => s.id === 'act2river' },
+  { label: 'Johnny / Rogue',   color: '#FF4081', match: (s) => s.id === 'act2johnny' },
+  { label: 'Kerry Questline',  color: '#EA80FC', match: (s) => s.id === 'act2kerry' },
+  { label: 'Phantom Liberty',  color: '#B060FF', match: (s) => s.id === 'phantom' },
+  { label: 'PL Side Quests',   color: '#CE93D8', match: (s) => s.id === 'opt_pl_side' },
+  { label: 'Optional — Early', color: '#FFF176', match: (s) => s.id === 'opt_earlyact2' },
+  { label: 'Epistrophy',       color: '#80DEEA', match: (s) => s.id === 'opt_epistrophy' },
+  { label: 'Beat on the Brat', color: '#FFAB40', match: (s) => s.id === 'opt_beatbrat' },
+  { label: 'Beast in Me',      color: '#FF8A65', match: (s) => s.id === 'opt_beastinme' },
+  { label: 'Sinnerman Chain',  color: '#A5D6A7', match: (s) => s.id === 'opt_sinnerman' },
+  { label: 'All Other Sides',  color: '#90CAF9', match: (s) => s.id === 'opt_misc_notable' },
+  { label: 'Act 3 Endings',    color: '#FF003C', match: (s) => s.id.startsWith('act3') },
+];
+
+function updateProgress() {
+  const allItems = document.querySelectorAll('.quest-item');
+  const total = allItems.length;
+  const done = document.querySelectorAll('.quest-item.done').length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} / ${total}`;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statLeft').textContent = total - done;
+  document.getElementById('statPct').textContent = pct + '%';
+
+  // Build category chart
+  const chart = document.getElementById('categoryChart');
+  chart.innerHTML = '';
+  categoryDefs.forEach(cat => {
+    const sec = sections.find(s => cat.match(s));
+    if (!sec) return;
+    const secDone = sec.quests.filter((q, i) => {
+      if (q.type === 'warning') return false;
+      return completed[getQuestId(sec.id, i)];
+    }).length;
+    const secTotal = sec.quests.filter(q => q.type !== 'warning').length;
+    if (secTotal === 0) return;
+    const secPct = Math.round(secDone / secTotal * 100);
+
+    const row = document.createElement('div');
+    row.className = 'category-row';
+    row.innerHTML = `
+      <div class="cat-name" title="${cat.label}">${cat.label}</div>
+      <div class="cat-bar-wrap">
+        <div class="cat-bar-fill" style="width:${secPct}%; background:${cat.color}22; border-right: 2px solid ${cat.color};"></div>
+      </div>
+      <div class="cat-count" style="color:${secPct===100?'#00FF88':''}">${secDone}/${secTotal}</div>
+    `;
+    chart.appendChild(row);
+  });
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.quest-item').forEach(item => {
+    const isDone = item.classList.contains('done');
+    const type = item.dataset.type;
+    let show = true;
+    if (f === 'main') show = type === 'main';
+    else if (f === 'side') show = type === 'side' || type === 'dlc';
+    else if (f === 'key') show = item.dataset.badge === 'key';
+    else if (f === 'undone') show = !isDone;
+    else if (f === 'done') show = isDone;
+    item.style.display = show ? '' : 'none';
+  });
+}
+
+function toggleSection(id) {
+  const list = document.getElementById('list_' + id);
+  const toggle = document.getElementById('toggle_' + id);
+  list.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+function toggleQuest(qid) {
+  completed[qid] = !completed[qid];
+  localStorage.setItem('cp77_completed', JSON.stringify(completed));
+  const el = document.getElementById('quest_' + qid);
+  el.classList.toggle('done', completed[qid]);
+  updateProgress();
+}
+
+function resetAll() {
+  if (confirm('Reset all quest progress?')) {
+    completed = {};
+    localStorage.removeItem('cp77_completed');
+    document.querySelectorAll('.quest-item').forEach(el => el.classList.remove('done'));
+    updateProgress();
+  }
+}
+
+function render() {
+  const container = document.getElementById('questContainer');
+  container.innerHTML = '';
+
+  sections.forEach(sec => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    const isOptional = sec.id.startsWith('opt_');
+
+    const header = document.createElement('div');
+    header.className = `section-header ${sec.type}`;
+    header.onclick = () => toggleSection(sec.id);
+
+    const count = sec.quests.length;
+    header.innerHTML = `
+      <span class="section-title">${sec.title}</span>
+      <span class="section-count">${count} quest${count !== 1 ? 's' : ''}</span>
+      <span class="section-toggle ${isOptional ? '' : 'open'}" id="toggle_${sec.id}">▶</span>
+    `;
+    div.appendChild(header);
+
+    const list = document.createElement('div');
+    list.className = isOptional ? 'quest-list' : 'quest-list open';
+    list.id = 'list_' + sec.id;
+
+    sec.quests.forEach((q, i) => {
+      const qid = getQuestId(sec.id, i);
+      const isDone = completed[qid];
+
+      if (q.type === 'warning') {
+        const wb = document.createElement('div');
+        wb.className = 'warning-box';
+        wb.innerHTML = `
+          <div class="warning-icon">⚠️</div>
+          <div class="warning-text">
+            <strong>NOCTURNE OP55N1 — POINT OF NO RETURN</strong><br>
+            Entering Embers locks you out of ALL side quests permanently. Do everything first, then save before entering. After finishing, the game reloads your pre-Embers save automatically so you can try other endings.
+          </div>
+        `;
+        list.appendChild(wb);
+        return;
+      }
+
+      const item = document.createElement('div');
+      item.className = `quest-item type-${q.type}${isDone ? ' done' : ''}`;
+      item.id = 'quest_' + qid;
+      item.dataset.type = q.type;
+      item.dataset.badge = q.badge || '';
+      item.onclick = () => toggleQuest(qid);
+
+      const noteClass = q.note && (q.note.includes('⚠') || q.note.includes('REQUIRES') || q.note.includes('CRITICAL')) ? 'important'
+        : q.note && (q.note.includes('TIP') || q.note.includes('Unlocks')) ? 'tip'
+        : q.note && q.note.includes('★') ? 'unlock' : '';
+
+      const badgeMap = { main: 'badge-main', side: 'badge-side', key: 'badge-key', dlc: 'badge-dlc' };
+      const badgeClass = badgeMap[q.badge] || 'badge-side';
+      const badgeLabel = q.badge === 'key' ? 'ENDING KEY' : q.badge?.toUpperCase() || 'SIDE';
+
+      item.innerHTML = `
+        <div class="quest-check"></div>
+        <div class="quest-info">
+          <div class="quest-name">${q.name}</div>
+          ${q.note ? `<div class="quest-note ${noteClass}">${q.note}</div>` : ''}
+        </div>
+        <span class="badge ${badgeClass}">${badgeLabel}</span>
+      `;
+      list.appendChild(item);
+    });
+
+    div.appendChild(list);
+    container.appendChild(div);
+  });
+
+  updateProgress();
+}
+
+render();
+</script>
+</body>
+</html>
