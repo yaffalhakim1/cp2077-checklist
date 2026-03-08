@@ -15,6 +15,7 @@
         scroll-behavior: smooth;
       }
 
+      /* ── DARK THEME (default) ── */
       :root {
         --teal: #00e5cc;
         --teal2: #00b8a0;
@@ -30,7 +31,57 @@
         --muted: #3a5c58;
         --green: #00ff88;
         --purple: #9060ff;
+
+        /* theme-specific aliases */
+        --accent: var(--teal);
+        --bg-grid: rgba(0,229,204,0.03);
+        --bg-dot: rgba(0,229,204,0.06);
+        --hatch-header: rgba(0,229,204,0.04);
+        --scanline-color: rgba(0,229,204,0.07);
+        --progress-glow: var(--teal2);
+        --filter-active-text: #080808;
+        --stat-pct-glow: rgba(0,229,204,0.4);
+        --warning-text-color: var(--text);
       }
+
+      /* ── LIGHT THEME ── */
+      html[data-theme="light"] {
+        --teal: #007a6e;
+        --teal2: #005a52;
+        --yellow: #a06800;
+        --red: #cc1010;
+        --orange: #b85a00;
+        --dark: #f0f0f2;
+        --dark2: #e4e4e8;
+        --dark3: #d8d8de;
+        --panel: #f8f8fa;
+        --border: #b0c0c0;
+        --text: #0a1414;
+        --muted: #5a7878;
+        --green: #006644;
+        --purple: #5030bb;
+
+        --accent: var(--red);
+        --bg-grid: rgba(0,0,0,0.04);
+        --bg-dot: rgba(200,0,0,0.05);
+        --hatch-header: rgba(0,0,0,0.025);
+        --scanline-color: rgba(0,0,0,0.04);
+        --progress-glow: transparent;
+        --filter-active-text: #f8f8fa;
+        --stat-pct-glow: rgba(0,0,0,0.15);
+        --warning-text-color: var(--text);
+      }
+
+      /* smooth theme transitions */
+      *, *::before, *::after {
+        transition:
+          background-color 0.35s ease,
+          border-color 0.35s ease,
+          color 0.35s ease,
+          box-shadow 0.35s ease;
+      }
+      /* Don't transition layout-affecting or animation props */
+      .progress-fill, .cat-bar-fill { transition: width 0.6s cubic-bezier(0.4,0,0.2,1) !important; }
 
       /* ── RESET ── */
       * {
@@ -55,8 +106,8 @@
         position: fixed;
         inset: 0;
         background-image:
-          linear-gradient(rgba(0, 229, 204, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 229, 204, 0.03) 1px, transparent 1px);
+          linear-gradient(var(--bg-grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
         background-size: 4rem 4rem;
         pointer-events: none;
         z-index: 0;
@@ -67,11 +118,7 @@
         content: "";
         position: fixed;
         inset: 0;
-        background-image: radial-gradient(
-          circle,
-          rgba(0, 229, 204, 0.06) 1px,
-          transparent 1px
-        );
+        background-image: radial-gradient(circle, var(--bg-dot) 1px, transparent 1px);
         background-size: 4rem 4rem;
         background-position: 2rem 2rem;
         pointer-events: none;
@@ -103,8 +150,8 @@
           -45deg,
           transparent,
           transparent 0.375rem,
-          rgba(0, 229, 204, 0.04) 0.375rem,
-          rgba(0, 229, 204, 0.04) 0.4375rem
+          var(--hatch-header) 0.375rem,
+          var(--hatch-header) 0.4375rem
         );
         pointer-events: none;
       }
@@ -247,7 +294,7 @@
         height: 100%;
         background: linear-gradient(90deg, var(--teal), var(--yellow));
         transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 10px var(--teal2);
+        box-shadow: 0 0 10px var(--progress-glow);
       }
       .progress-label {
         font-size: 0.875rem;
@@ -299,9 +346,93 @@
       }
       .filter-btn.active {
         border-color: var(--teal);
-        color: var(--dark);
+        color: var(--filter-active-text);
         background: var(--teal);
         box-shadow: 0 0 15px rgba(0, 229, 204, 0.3);
+      }
+
+      /* ── THEME SWITCHER ── */
+      .theme-switcher {
+        position: fixed;
+        top: 1.25rem;
+        right: 1.25rem;
+        z-index: 500;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        border: 1px solid var(--border);
+        background: var(--dark2);
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.625rem;
+        letter-spacing: 0.1rem;
+        overflow: hidden;
+        clip-path: polygon(0 0, calc(100% - 0.4rem) 0, 100% 0.4rem, 100% 100%, 0 100%);
+      }
+      .theme-btn {
+        padding: 0.5rem 0.75rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-family: inherit;
+        font-size: inherit;
+        letter-spacing: inherit;
+        text-transform: uppercase;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+      .theme-btn.active {
+        background: var(--teal);
+        color: var(--filter-active-text);
+      }
+      .theme-btn:not(.active):hover {
+        color: var(--text);
+        background: var(--dark3);
+      }
+      .theme-divider {
+        width: 1px;
+        height: 1.5rem;
+        background: var(--border);
+        flex-shrink: 0;
+      }
+
+      /* light theme: red accent for filter active glow */
+      html[data-theme="light"] .filter-btn.active {
+        box-shadow: 0 0 15px rgba(200,16,16,0.2);
+      }
+      html[data-theme="light"] .progress-fill {
+        box-shadow: none;
+      }
+      html[data-theme="light"] .reset-btn:hover {
+        box-shadow: 0 0 15px rgba(200,16,16,0.3);
+      }
+      /* light theme: glitch uses dark colors */
+      html[data-theme="light"] h1 {
+        animation: glitch-light 4s infinite;
+      }
+      @keyframes glitch-light {
+        0%   { text-shadow: 0.15rem 0 var(--red), -0.15rem 0 var(--teal); clip-path: inset(10% 0 80% 0); transform: translate(-2px,2px); }
+        2%   { text-shadow: -0.15rem 0 var(--red), 0.15rem 0 var(--teal); clip-path: inset(60% 0 20% 0); transform: translate(2px,-2px); }
+        4%   { text-shadow: 0.15rem 0 var(--red), -0.15rem 0 var(--teal); clip-path: inset(30% 0 50% 0); transform: translate(-2px,0); }
+        6%   { clip-path: inset(0); text-shadow: none; transform: translate(0); }
+        100% { clip-path: inset(0); text-shadow: none; transform: translate(0); }
+      }
+      /* light: section header hover */
+      html[data-theme="light"] .section-header:hover {
+        background: rgba(0,0,0,0.04);
+        padding-left: 1.5rem;
+      }
+      html[data-theme="light"] .quest-item:hover {
+        background: rgba(0,0,0,0.04);
+      }
+      html[data-theme="light"] .stats-header:hover {
+        background: var(--dark3);
+      }
+      html[data-theme="light"] .dev-link:hover {
+        background: rgba(160,104,0,0.08);
+        box-shadow: 0 0 10px rgba(160,104,0,0.2);
       }
 
       /* ── STATS PANEL ── */
@@ -389,7 +520,7 @@
       }
       .stat-card.c-pct .stat-value {
         color: var(--teal);
-        text-shadow: 0 0 10px rgba(0, 229, 204, 0.4);
+        text-shadow: 0 0 10px var(--stat-pct-glow);
       }
       .stat-card.c-done .stat-value {
         color: var(--green);
@@ -635,6 +766,12 @@
     </style>
   </head>
   <body>
+    <!-- THEME SWITCHER -->
+    <div class="theme-switcher" id="themeSwitcher">
+      <button class="theme-btn active" id="btnDark" onclick="setTheme('dark')" title="Dark theme">◼ DARK</button>
+      <div class="theme-divider"></div>
+      <button class="theme-btn" id="btnLight" onclick="setTheme('light')" title="Light theme">◻ LIGHT</button>
+    </div>
     <header>
       <div class="header-tag">
         <span>NEURAL INTERFACE v3.1 — QUEST TRACKER</span>
@@ -1875,6 +2012,26 @@
         list.classList.toggle("open");
         toggle.classList.toggle("open");
       }
+
+      /**
+       * THEME SWITCHER
+       */
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('cp77_theme', theme);
+        document.getElementById('btnDark').classList.toggle('active', theme === 'dark');
+        document.getElementById('btnLight').classList.toggle('active', theme === 'light');
+      }
+
+      // Load saved theme on init
+      (function() {
+        const saved = localStorage.getItem('cp77_theme') || 'dark';
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.getElementById('btnDark').classList.remove('active');
+          document.getElementById('btnLight').classList.add('active');
+        }
+      })();
 
       // INITIATE
       State.init();
