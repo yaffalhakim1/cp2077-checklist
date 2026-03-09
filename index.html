@@ -739,6 +739,48 @@
         color: var(--yellow);
       }
 
+      /* ── SECTION COMPLETE TAG ── */
+      .section-done-tag {
+        display: none;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.5625rem;
+        letter-spacing: 0.1rem;
+        text-transform: uppercase;
+        padding: 0.1875rem 0.5rem;
+        border: 1px solid var(--green);
+        color: var(--green);
+        background: rgba(0, 255, 136, 0.08);
+        clip-path: polygon(0 0, calc(100% - 0.3rem) 0, 100% 0.3rem, 100% 100%, 0 100%);
+        white-space: nowrap;
+        flex-shrink: 0;
+        animation: tagPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .section-header.is-complete .section-done-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .section-header.is-complete .section-done-tag::before {
+        content: "✓";
+        font-size: 0.625rem;
+      }
+      .section-header.is-complete {
+        opacity: 0.72;
+      }
+      .section-header.is-complete .section-title {
+        text-decoration: line-through;
+        text-decoration-color: var(--muted);
+        text-decoration-thickness: 1px;
+      }
+      @keyframes tagPop {
+        from { transform: scale(0.7); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+      }
+
+      html[data-theme="light"] .section-done-tag {
+        background: rgba(0, 102, 68, 0.08);
+      }
+
       .category-row {
         display: flex;
         align-items: center;
@@ -861,419 +903,184 @@
 
     <script>
       /**
-       * QUEST DATABASE (Restored Original Content)
+       * QUEST DATABASE — Corrected & wiki-accurate (cyberpunk.fandom.com)
        */
       const QUEST_DATA = [
+
+        // ── PROLOGUE ──────────────────────────────────────────────────────────
         {
           id: "prologue",
-          title: "① PROLOGUE — 2076",
+          title: "① PROLOGUE — 2076 (Lifepath Intro)",
           type: "act-main",
           quests: [
-            {
-              name: "The Nomad / The Streetkid / The Corpo-Rat",
-              type: "main",
-              note: "Only one plays — depends on your lifepath choice",
-              badge: "main",
-            },
-            {
-              name: "The Rescue",
-              type: "main",
-              note: "First shared quest for all lifepaths — meet Jackie Welles",
-              badge: "main",
-            },
+            { name: "The Corpo-Rat",  type: "main", note: "Corpo lifepath only — Arasaka HQ intrigue, meet Jackie Welles", badge: "main" },
+            { name: "The Nomad",      type: "main", note: "Nomad lifepath only — cross into Night City from the Badlands with Jackie", badge: "main" },
+            { name: "The Streetkid", type: "main", note: "Street Kid lifepath only — steal a car with Jackie in Heywood", badge: "main" },
+            { name: "Practice Makes Perfect", type: "main", note: "Jackie gives you a Training Shard — complete 4 combat tutorials before The Rescue", badge: "main" },
+            { name: "The Rescue", type: "main", note: "All lifepaths converge here — rescue Sandra Dorsett from scavengers in Japantown", badge: "main" },
           ],
         },
+
+        // ── ACT 1 ─────────────────────────────────────────────────────────────
         {
           id: "act1",
           title: "② ACT 1 — THE HEIST",
           type: "act-main",
           quests: [
-            { name: "The Ripperdoc", type: "main", badge: "main" },
-            { name: "The Ride", type: "main", badge: "main" },
-            {
-              name: "The Pickup",
-              type: "main",
-              note: "TIP: Side with Militech → unlocks Meredith Stout romance later",
-              badge: "main",
-            },
-            { name: "The Information", type: "main", badge: "main" },
-            {
-              name: "The Heist",
-              type: "main",
-              note: "Major story turning point — brings in Johnny Silverhand",
-              badge: "main",
-            },
+            { name: "The Ripperdoc",   type: "main", note: "Jackie takes you to Viktor — install cyberware and learn the basics", badge: "main" },
+            { name: "The Ride",        type: "main", note: "Dexter DeShawn pitches the Konpeki Plaza heist during a limo ride", badge: "main" },
+            { name: "The Pickup",      type: "main", note: "Retrieve the Flathead from Maelstrom. TIP: Work with Meredith Stout (Militech) to unlock her romance arc.", badge: "main" },
+            { name: "The Information", type: "main", note: "Visit Lizzie's Bar — meet Evelyn Parker and Judy Alvarez; braindance the relic", badge: "main" },
+            { name: "The Heist",       type: "main", note: "Steal the Relic from Konpeki Plaza. Major turning point — Johnny Silverhand enters.", badge: "main" },
           ],
         },
+
+        // ── INTERLUDE ─────────────────────────────────────────────────────────
         {
           id: "interlude",
-          title: "③ INTERLUDE — NEVER FADE AWAY",
+          title: "③ INTERLUDE — LOVE LIKE FIRE (2023)",
           type: "act-main",
           quests: [
-            {
-              name: "Love Like Fire",
-              type: "main",
-              note: "Played as Johnny in 2023 — inventory/map unavailable",
-              badge: "main",
-            },
+            { name: "Love Like Fire", type: "main", note: "Play as Johnny Silverhand in 2023 — the Arasaka Tower raid. Inventory and map unavailable.", badge: "main" },
           ],
         },
+
+        // ── ACT 2 OPENING ─────────────────────────────────────────────────────
         {
           id: "act2open",
           title: "④ ACT 2 — OPENING",
           type: "act-main",
           quests: [
-            {
-              name: "Playing for Time",
-              type: "main",
-              note: "Unlocks all Act 2 quest branches simultaneously",
-              badge: "main",
-            },
+            { name: "Playing for Time", type: "main", note: "Escape the landfill, return to V's apartment. Takemura contacts you at Tom's Diner. All Night City districts now open. THREE parallel main branches start simultaneously.", badge: "main" },
           ],
         },
+
+        // ── ACT 2 THREE PARALLEL MAIN BRANCHES (interleaved per wiki order) ──
         {
-          id: "act2judy",
-          title: "⑤ ACT 2 — JUDY'S QUESTLINE (Do First)",
-          type: "act-side",
-          quests: [
-            {
-              name: "Automatic Love",
-              type: "main",
-              note: "Main quest — visit Clouds, starts Judy + Voodoo Boys thread",
-              badge: "main",
-            },
-            { name: "The Space In Between", type: "main", badge: "main" },
-            { name: "Disasterpiece", type: "main", badge: "main" },
-            {
-              name: "Double Life",
-              type: "main",
-              note: "Unlocks Voodoo Boys questline",
-              badge: "main",
-            },
-            {
-              name: "Both Sides, Now",
-              type: "side",
-              note: "★ Judy side quest #1 — Support her ideas throughout",
-              badge: "side",
-            },
-            {
-              name: "Ex-Factor",
-              type: "side",
-              note: "★ Judy side quest #2",
-              badge: "side",
-            },
-            {
-              name: "Talkin' 'Bout a Revolution",
-              type: "side",
-              note: "★ Judy side quest #3",
-              badge: "side",
-            },
-            {
-              name: "Pisces",
-              type: "side",
-              note: "★ Judy side quest #4 — Choice at end affects relationship",
-              badge: "side",
-            },
-            {
-              name: "Pyramid Song",
-              type: "side",
-              note: "★ KEY: Romance Judy here + unlocks her apartment safehouse",
-              badge: "key",
-            },
-          ],
-        },
-        {
-          id: "act2voodoo",
-          title: "⑥ ACT 2 — VOODOO BOYS (Unlocks Phantom Liberty)",
+          id: "act2main_parallel",
+          title: "⑤ ACT 2 — THREE MAIN BRANCHES (Interleaved Order)",
           type: "act-main",
           quests: [
-            {
-              name: "M'ap Tann Pelen",
-              type: "main",
-              note: "Meet Placide in Pacifica",
-              badge: "main",
-            },
-            {
-              name: "I Walk the Line",
-              type: "main",
-              note: "Take down the Animals in Grand Imperial Mall",
-              badge: "main",
-            },
-            {
-              name: "Never Fade Away",
-              type: "main",
-              note: "Part of Transmission — learn Alt Cunningham's fate",
-              badge: "main",
-            },
-            {
-              name: "Transmission",
-              type: "main",
-              note: "★ KEY: Meet Brigitte + contact Alt. Phantom Liberty now available!",
-              badge: "key",
-            },
+            { name: "Automatic Love",      type: "main", note: "[BRANCH 1 — Evelyn/Voodoo Boys] Go to Clouds nightclub in Kabuki; interrogate Woodman to find Evelyn Parker", badge: "main" },
+            { name: "Ghost Town",          type: "main", note: "[BRANCH 2 — Hellman/Panam] Meet Rogue at Afterlife; she directs you to Panam Palmer in the Badlands", badge: "main" },
+            { name: "Down on the Street",  type: "main", note: "[BRANCH 3 — Takemura] Answer Takemura's call; meet him at the Japantown docks", badge: "main" },
+            { name: "The Space In Between",type: "main", note: "[BRANCH 1] Track Evelyn to Fingers Ripperdoc on Jig-Jig Street, Japantown", badge: "main" },
+            { name: "Lightning Breaks",    type: "main", note: "[BRANCH 2] Panam and V ambush a Militech convoy at the power plant to get information on Hellman", badge: "main" },
+            { name: "Gimme Danger",        type: "main", note: "[BRANCH 3] Meet Takemura; infiltrate Arasaka Industrial Park together. TIP: Accompany him for bonus content.", badge: "main" },
+            { name: "Disasterpiece",       type: "main", note: "[BRANCH 1] Braindance with Judy; rescue Evelyn from the underground power plant in Charter Hill", badge: "main" },
+            { name: "Life During Wartime", type: "main", note: "[BRANCH 2] Starts immediately after Lightning Breaks — chase Hellman to the crash site; Panam and the Aldecados help", badge: "main" },
+            { name: "Play It Safe",        type: "main", note: "[BRANCH 3] Guard Takemura during Hanako's parade; kill 3 snipers and defeat Sandayu Oda. REQUIRES: Transmission + Life During Wartime both complete.", badge: "main" },
+            { name: "Double Life",         type: "main", note: "[BRANCH 1] Braindance Evelyn's memories with Judy in her Kabuki apartment; uncover the Voodoo Boys connection", badge: "main" },
+            { name: "Search and Destroy",  type: "main", note: "[BRANCH 3] ⚠ CRITICAL CHOICE: SAVE Takemura inside the Vista del Rey motel or the Arasaka/Devil ending is permanently locked", badge: "key" },
+            { name: "M'ap Tann Pelen",     type: "main", note: "[BRANCH 1 — Voodoo Boys] Call Mr. Hands; enter Pacifica; meet Placide at the Serenity Bible Church", badge: "main" },
+            { name: "I Walk the Line",     type: "main", note: "[BRANCH 1] Complete Placide's job at the Grand Imperial Mall; confront the Animals gang and a Netwatch agent", badge: "main" },
+            { name: "Never Fade Away",     type: "main", note: "[BRANCH 1] Plays as a memory sequence INSIDE Transmission — relive Johnny's 2023 past and Alt Cunningham's fate", badge: "main" },
+            { name: "Transmission",        type: "main", note: "[BRANCH 1] Let Brigitte unlock Johnny's memories in the Voodoo Boys hideout. ★ KEY: Phantom Liberty becomes available after this.", badge: "key" },
+            { name: "Tapeworm",            type: "main", note: "Auto-triggers once ALL FOUR are done: Transmission + Automatic Love + Search and Destroy + Life During Wartime. Talk to Johnny; open his cache.", badge: "main" },
           ],
         },
+
+        // ── PHANTOM LIBERTY DLC ───────────────────────────────────────────────
         {
           id: "phantom",
-          title: "⑦ PHANTOM LIBERTY DLC (Unlocked Here — Do Now)",
+          title: "⑥ PHANTOM LIBERTY DLC — Do After Transmission",
           type: "act-dlc",
           quests: [
-            {
-              name: "Phantom Liberty",
-              type: "dlc",
-              note: "Start point: get a call from Songbird after Transmission. Go to Dogtown.",
-              badge: "dlc",
-            },
-            { name: "Dog Eat Dog", type: "dlc", badge: "dlc" },
-            { name: "Hole in the Sky", type: "dlc", badge: "dlc" },
-            { name: "Lucretia My Reflection", type: "dlc", badge: "dlc" },
-            { name: "The Damned", type: "dlc", badge: "dlc" },
-            { name: "You Know My Name", type: "dlc", badge: "dlc" },
-            { name: "Spider and the Fly", type: "dlc", badge: "dlc" },
-            {
-              name: "Firestarter",
-              type: "dlc",
-              note: "⚠ BRANCH POINT: Side with Reed → Path A | Side with Songbird → Path B",
-              badge: "dlc",
-            },
-            {
-              name: "[Path A] Somewhat Damaged → Leave in Silence → Four Score and Seven → Who Wants to Live Forever → Things Done Changed",
-              type: "dlc",
-              note: "(Reed path — unlocks unique Phantom Liberty ending)",
-              badge: "dlc",
-            },
-            {
-              name: "[Path B] Black Steel in the Hour of Chaos → Unfinished Sympathy → Through Pain to Heaven",
-              type: "dlc",
-              note: "(Songbird path)",
-              badge: "dlc",
-            },
-            {
-              name: "TIP: After Firestarter you can leave Dogtown freely — come back to finish later",
-              type: "dlc",
-              note: "Weave between DLC and base game quests below as you like",
-              badge: "dlc",
-            },
+            { name: "Phantom Liberty",         type: "dlc", note: "Songbird calls V after Transmission — travel to Dogtown. Entry point for the entire DLC.", badge: "dlc" },
+            { name: "Dog Eat Dog",             type: "dlc", note: "Infiltrate Dogtown's checkpoints and locate the crashed presidential shuttle", badge: "dlc" },
+            { name: "Hole in the Sky",         type: "dlc", note: "Reach the shuttle crash site — meet FIA agent Solomon Reed", badge: "dlc" },
+            { name: "Lucretia My Reflection",  type: "dlc", note: "Debrief with Reed; establish your cover inside Dogtown", badge: "dlc" },
+            { name: "The Damned",              type: "dlc", note: "Investigate Kurt Hansen's operation in and around the stadium", badge: "dlc" },
+            { name: "You Know My Name",        type: "dlc", note: "Infiltrate the Black Sapphire gala — high-stakes social stealth mission", badge: "dlc" },
+            { name: "Spider and the Fly",      type: "dlc", note: "Escape Hansen's trap and regroup with Reed and Alex", badge: "dlc" },
+            { name: "Get It Together",         type: "dlc", note: "Recover Alex and finalize the extraction plan with Reed", badge: "dlc" },
+            { name: "Firestarter",             type: "dlc", note: "⚠ PERMANENT BRANCH POINT — Side with Reed (Path A) OR Songbird (Path B). This cannot be reversed.", badge: "key" },
+
+            { name: "[PATH A — REED] Somewhat Damaged",        type: "dlc", note: "Reed path: breach cyberspace to capture Songbird", badge: "dlc" },
+            { name: "[PATH A — REED] Leave in Silence",        type: "dlc", note: "Reed path: deliver Songbird to the FIA extraction point", badge: "dlc" },
+            { name: "[PATH A — REED] Four Score and Seven",    type: "dlc", note: "Reed path: aftermath — meet President Myers", badge: "dlc" },
+            { name: "[PATH A — REED] Who Wants to Live Forever", type: "dlc", note: "★ KEY: Reed path finale — unlocks the 'So It Goes (Reed)' new base-game ending for V", badge: "key" },
+            { name: "[PATH A — REED] Things Done Changed",     type: "dlc", note: "Reed path epilogue — final conversation with Reed", badge: "dlc" },
+
+            { name: "[PATH B — SONGBIRD] Black Steel in the Hour of Chaos", type: "dlc", note: "Songbird path: break So Mi out of Militech custody", badge: "dlc" },
+            { name: "[PATH B — SONGBIRD] Unfinished Sympathy",              type: "dlc", note: "Songbird path: escort So Mi through Dogtown to the extraction point", badge: "dlc" },
+            { name: "[PATH B — SONGBIRD] Through Pain to Heaven",           type: "dlc", note: "★ KEY: Songbird path finale — unlocks the 'So It Goes (Songbird)' new base-game ending for V", badge: "key" },
+          ],
+        },
+
+        // ── ACT 2 COMPANION QUESTLINES ────────────────────────────────────────
+        {
+          id: "act2judy",
+          title: "⑦ ACT 2 — JUDY'S QUESTLINE",
+          type: "act-side",
+          quests: [
+            { name: "Both Sides, Now",           type: "side", note: "Unlocks after Disasterpiece — Judy mourns Evelyn; support her throughout", badge: "side" },
+            { name: "Ex-Factor",                 type: "side", note: "Judy reclaims Clouds from Tyger Claws with your help", badge: "side" },
+            { name: "Talkin' 'Bout a Revolution",type: "side", note: "Judy and the dolls plan to run Clouds as a worker co-op", badge: "side" },
+            { name: "Pisces",                    type: "side", note: "⚠ KEY CHOICE: Back Judy's plan at the end — betraying her locks out Pyramid Song forever", badge: "side" },
+            { name: "Pyramid Song",              type: "side", note: "★ KEY: Romance Judy (feminine V only) + unlocks her loft safehouse", badge: "key" },
           ],
         },
         {
           id: "act2panam",
-          title: "⑧ ACT 2 — PANAM'S QUESTLINE (Required for Nomad Ending)",
+          title: "⑧ ACT 2 — PANAM'S QUESTLINE",
           type: "act-side",
           quests: [
-            {
-              name: "Ghost Town",
-              type: "main",
-              note: "Main quest — meet Rogue at Afterlife, capture Hellman",
-              badge: "main",
-            },
-            {
-              name: "Lightning Breaks",
-              type: "main",
-              note: "Panam & V take down Hellman's transport",
-              badge: "main",
-            },
-            {
-              name: "Life During Wartime",
-              type: "main",
-              note: "Find Hellman at crash site with Aldecados",
-              badge: "main",
-            },
-            {
-              name: "Riders on the Storm",
-              type: "side",
-              note: "★ Panam side quest #1",
-              badge: "side",
-            },
-            {
-              name: "With a Little Help from My Friends",
-              type: "side",
-              note: "★ Panam side quest #2",
-              badge: "side",
-            },
-            {
-              name: "Queen of the Highway",
-              type: "side",
-              note: "★ KEY: Romance + unlocks Nomad ending + Aldecado safehouse",
-              badge: "key",
-            },
-          ],
-        },
-        {
-          id: "act2takemura",
-          title: "⑨ ACT 2 — TAKEMURA'S QUESTLINE (Required for Arasaka Ending)",
-          type: "act-side",
-          quests: [
-            { name: "Down on the Street", type: "main", badge: "main" },
-            {
-              name: "Gimme Danger",
-              type: "main",
-              note: "TIP: Go with Takemura — bonus infiltration mission",
-              badge: "main",
-            },
-            {
-              name: "Play It Safe",
-              type: "main",
-              note: "Defeat 3 snipers + boss fight against Oda",
-              badge: "main",
-            },
-            {
-              name: "Search and Destroy",
-              type: "main",
-              note: "⚠ SAVE TAKEMURA — required for the Devil ending!",
-              badge: "key",
-            },
+            { name: "Riders on the Storm",             type: "side", note: "Unlocks after Life During Wartime — rescue Saul from the Wraiths during a sandstorm", badge: "side" },
+            { name: "With a Little Help from My Friends", type: "side", note: "Steal an Aldecado Basilisk tank from Militech with Panam's crew", badge: "side" },
+            { name: "Queen of the Highway",            type: "side", note: "★ KEY: Romance Panam (masculine V only) — REQUIRED to unlock the Nomad/Aldecados ending", badge: "key" },
           ],
         },
         {
           id: "act2river",
-          title: "⑩ ACT 2 — RIVER'S QUESTLINE",
+          title: "⑨ ACT 2 — RIVER'S QUESTLINE",
           type: "act-side",
           quests: [
-            {
-              name: "I Fought the Law",
-              type: "side",
-              note: "Unlocks after Ghost Town + raising Heywood/City Center/Westbrook Street Cred",
-              badge: "side",
-            },
-            {
-              name: "The Hunt",
-              type: "side",
-              note: "Help River find his nephew Randy — save Randy for romance option",
-              badge: "side",
-            },
-            {
-              name: "Following the River",
-              type: "side",
-              note: "★ Romance River here (feminine V only)",
-              badge: "side",
-            },
+            { name: "I Fought the Law",    type: "side", note: "Unlocks after Ghost Town — help Detective River Ward investigate a corrupt politician", badge: "side" },
+            { name: "The Hunt",            type: "side", note: "Help River find his kidnapped nephew Randy — ⚠ keep Randy alive to unlock romance and Following the River", badge: "side" },
+            { name: "Following the River", type: "side", note: "★ Romance River here (feminine V only) — visit his family's farm outside the city", badge: "side" },
           ],
         },
         {
           id: "act2johnny",
-          title: "⑪ ACT 2 — JOHNNY / ROGUE QUESTLINE (Required for Sun Ending)",
+          title: "⑩ ACT 2 — JOHNNY / ROGUE QUESTLINE",
           type: "act-side",
           quests: [
-            {
-              name: "Tapeworm",
-              type: "main",
-              note: "Auto-triggers after completing the 3 main quest branches",
-              badge: "main",
-            },
-            {
-              name: "Chippin' In",
-              type: "side",
-              note: "★ KEY: Unlocks after Automatic Love + Life During Wartime + Transmission + Search and Destroy",
-              badge: "key",
-            },
-            {
-              name: "Blistering Love",
-              type: "side",
-              note: "★ Rogue date — required for the Sun ending path",
-              badge: "key",
-            },
+            { name: "Chippin' In",    type: "side", note: "★ KEY: Unlocks after Tapeworm — meet Rogue at Afterlife. ⚠ Choose 'The Guy Who Saved My Life' dialogue to guarantee 70% Johnny relationship (required for secret ending).", badge: "key" },
+            { name: "Blistering Love",type: "side", note: "★ KEY: Take Rogue on a 'date' to the drive-in cinema — REQUIRED for the Sun/Rogue ending path", badge: "key" },
           ],
         },
         {
           id: "act2kerry",
-          title: "⑫ ACT 2 — KERRY'S QUESTLINE (Boosts Johnny Relationship %)",
+          title: "⑪ ACT 2 — KERRY'S QUESTLINE",
           type: "act-side",
           quests: [
-            {
-              name: "Holdin' On",
-              type: "side",
-              note: "Unlocks after Chippin' In",
-              badge: "side",
-            },
-            { name: "Second Conflict", type: "side", badge: "side" },
-            { name: "A Like Supreme", type: "side", badge: "side" },
-            { name: "Rebel! Rebel!", type: "side", badge: "side" },
-            {
-              name: "I Don't Wanna Hear It",
-              type: "side",
-              note: "TIP: Do NOT threaten the band — unlocks next quest",
-              badge: "side",
-            },
-            {
-              name: "Off the Leash",
-              type: "side",
-              note: "★ Romance Kerry here (masculine V only)",
-              badge: "side",
-            },
-            {
-              name: "Boat Drinks",
-              type: "side",
-              note: '★ Kiss Kerry + "Pencil me in" to solidify romance',
-              badge: "side",
-            },
+            { name: "Holdin' On",            type: "side", note: "Unlocks after Chippin' In — help Kerry deal with a dangerous superfan", badge: "side" },
+            { name: "Second Conflict",       type: "side", note: "Kerry's band Us Cracks breaks up — help him handle the fallout", badge: "side" },
+            { name: "A Like Supreme",        type: "side", note: "★ KEY: Required for the secret 'Don't Fear the Reaper' ending — Kerry and Johnny reconnect on stage", badge: "key" },
+            { name: "Rebel! Rebel!",         type: "side", note: "Sabotage a rival record label release with Kerry", badge: "side" },
+            { name: "I Don't Wanna Hear It", type: "side", note: "⚠ Do NOT threaten the band during this quest or Off the Leash will not unlock", badge: "side" },
+            { name: "Off the Leash",         type: "side", note: "★ Romance Kerry here (masculine V only)", badge: "side" },
+            { name: "Boat Drinks",           type: "side", note: "Kiss Kerry and choose 'Pencil me in' to confirm the romance", badge: "side" },
           ],
         },
+
+        // ── OPTIONAL SIDE QUEST CHAINS ────────────────────────────────────────
         {
           id: "opt_earlyact2",
-          title: "🟡 OPTIONAL — Early Act 2 Side Quests",
+          title: "🟡 OPTIONAL — Early Act 2 Side Quests (Do Before Moving On)",
           type: "act-side",
           quests: [
-            {
-              name: "Happy Together",
-              type: "side",
-              note: "⚠ MISSABLE: Talk to Barry before 3 in-game days pass or he dies. Check on your neighbor.",
-              badge: "side",
-            },
-            {
-              name: "Heroes",
-              type: "side",
-              note: "Jackie's memorial — visit his family in Heywood. Missable if ignored long.",
-              badge: "side",
-            },
-            {
-              name: "The Gig",
-              type: "side",
-              note: "Short intro quest — unlock Rogue at the Afterlife bar",
-              badge: "side",
-            },
-            {
-              name: "Bullets",
-              type: "side",
-              note: "Meet Goro Takemura at Wakako's — required to start his questline",
-              badge: "side",
-            },
-            {
-              name: "Human Nature",
-              type: "side",
-              note: "Short quest from Delamain taxi service — starts the Epistrophy chain",
-              badge: "side",
-            },
-            {
-              name: "Full Disclosure",
-              type: "side",
-              note: "Help Sandra Dorsett's sister after the Prologue rescue",
-              badge: "side",
-            },
-            {
-              name: "Paid in Full",
-              type: "side",
-              note: "Pay off your debt to Viktor — required to unlock The Gun",
-              badge: "side",
-            },
-            {
-              name: "The Gun",
-              type: "side",
-              note: "Recover Viktor's iconic gun — unlocks after Paid in Full",
-              badge: "side",
-            },
-            {
-              name: "War Pigs",
-              type: "side",
-              note: "(Corpo lifepath exclusive) — confront your old Arasaka handler",
-              badge: "side",
-            },
-            {
-              name: "These Boots Are Made For Walkin'",
-              type: "side",
-              note: "(Nomad lifepath exclusive) — recover your old car",
-              badge: "side",
-            },
+            { name: "Happy Together",  type: "side", note: "⚠ MISSABLE: Visit Barry in the apartment below yours within 3 in-game days or he dies", badge: "side" },
+            { name: "Heroes",          type: "side", note: "Jackie's memorial — visit his family in Heywood. Do soon after Act 2 begins.", badge: "side" },
+            { name: "The Gig",         type: "side", note: "Short intro quest — unlocks Rogue as a contact at the Afterlife bar", badge: "side" },
+            { name: "Bullets",         type: "side", note: "Meet Goro Takemura at Wakako's parlor — required to start his questline (Down on the Street)", badge: "side" },
+            { name: "Human Nature",    type: "side", note: "Delamain taxi introduction — starts the Epistrophy chain across Night City", badge: "side" },
+            { name: "Full Disclosure", type: "side", note: "Help Sandra Dorsett's sister — follow-up to The Rescue in the Prologue", badge: "side" },
+            { name: "Paid in Full",    type: "side", note: "Repay your debt to Viktor — required to unlock The Gun quest", badge: "side" },
+            { name: "The Gun",         type: "side", note: "Recover Viktor's iconic revolver — unlocks only after Paid in Full", badge: "side" },
+            { name: "War Pigs",        type: "side", note: "(Corpo lifepath only) — confront your old Arasaka handler in Watson", badge: "side" },
+            { name: "These Boots Are Made For Walkin'", type: "side", note: "(Nomad lifepath only) — recover your old car from the Badlands", badge: "side" },
           ],
         },
         {
@@ -1281,28 +1088,14 @@
           title: "🟡 OPTIONAL — Epistrophy (Delamain Taxi Chain)",
           type: "act-side",
           quests: [
-            {
-              name: "Epistrophy: Badlands",
-              type: "side",
-              note: "Find rogue Delamain cab in the Badlands",
-              badge: "side",
-            },
-            { name: "Epistrophy: Coastview", type: "side", badge: "side" },
-            { name: "Epistrophy: The Glen", type: "side", badge: "side" },
-            { name: "Epistrophy: North Oak", type: "side", badge: "side" },
-            { name: "Epistrophy: Northside", type: "side", badge: "side" },
-            {
-              name: "Epistrophy: Rancho Coronado",
-              type: "side",
-              badge: "side",
-            },
-            { name: "Epistrophy: Wellsprings", type: "side", badge: "side" },
-            {
-              name: "Epistrophy (Final)",
-              type: "side",
-              note: "Unlocks after collecting all 7 cabs — decide Delamain's fate",
-              badge: "side",
-            },
+            { name: "Epistrophy: Badlands",        type: "side", note: "Find the rogue Delamain cab in the Southern Badlands", badge: "side" },
+            { name: "Epistrophy: Coastview",       type: "side", badge: "side" },
+            { name: "Epistrophy: The Glen",        type: "side", badge: "side" },
+            { name: "Epistrophy: North Oak",       type: "side", badge: "side" },
+            { name: "Epistrophy: Northside",       type: "side", badge: "side" },
+            { name: "Epistrophy: Rancho Coronado", type: "side", badge: "side" },
+            { name: "Epistrophy: Wellsprings",     type: "side", badge: "side" },
+            { name: "Epistrophy (Final)",          type: "side", note: "Unlocks after all 7 cabs found — return to Delamain HQ to decide its fate", badge: "side" },
           ],
         },
         {
@@ -1310,27 +1103,13 @@
           title: "🟡 OPTIONAL — Beat on the Brat (Boxing Chain)",
           type: "act-side",
           quests: [
-            {
-              name: "Beat on the Brat",
-              type: "side",
-              note: "Starter quest from Coach Fred — unlocks all bouts",
-              badge: "side",
-            },
-            { name: "Beat on the Brat: Kabuki", type: "side", badge: "side" },
-            { name: "Beat on the Brat: Arroyo", type: "side", badge: "side" },
-            { name: "Beat on the Brat: The Glen", type: "side", badge: "side" },
-            {
-              name: "Beat on the Brat: Rancho Coronado",
-              type: "side",
-              badge: "side",
-            },
-            { name: "Beat on the Brat: Pacifica", type: "side", badge: "side" },
-            {
-              name: "Beat on the Brat: Championship",
-              type: "side",
-              note: "Final bout — unlocks after beating all 5 fighters",
-              badge: "side",
-            },
+            { name: "Beat on the Brat",                   type: "side", note: "Get the quest from Coach Fred — unlocks all regional bouts", badge: "side" },
+            { name: "Beat on the Brat: Kabuki",           type: "side", badge: "side" },
+            { name: "Beat on the Brat: Arroyo",           type: "side", badge: "side" },
+            { name: "Beat on the Brat: The Glen",         type: "side", badge: "side" },
+            { name: "Beat on the Brat: Rancho Coronado",  type: "side", badge: "side" },
+            { name: "Beat on the Brat: Pacifica",         type: "side", badge: "side" },
+            { name: "Beat on the Brat: Championship",     type: "side", note: "Final bout — unlocks only after all 5 regional fighters are defeated", badge: "side" },
           ],
         },
         {
@@ -1338,35 +1117,12 @@
           title: "🟡 OPTIONAL — The Beast in Me (Street Racing Chain)",
           type: "act-side",
           quests: [
-            {
-              name: "Tune Up",
-              type: "side",
-              note: "Help Claire with her truck — do this first before the race chain",
-              badge: "side",
-            },
-            {
-              name: "The Beast in Me",
-              type: "side",
-              note: "Meet Claire at Afterlife — starts racing questline",
-              badge: "side",
-            },
-            {
-              name: "The Beast in Me: City Center",
-              type: "side",
-              badge: "side",
-            },
-            { name: "The Beast in Me: Badlands", type: "side", badge: "side" },
-            {
-              name: "The Beast in Me: Santo Domingo",
-              type: "side",
-              badge: "side",
-            },
-            {
-              name: "The Beast in Me: The Big Race",
-              type: "side",
-              note: "Final race — let Claire get revenge or stop her",
-              badge: "side",
-            },
+            { name: "Tune Up",                        type: "side", note: "Help Claire fix her truck — do this BEFORE the racing chain starts", badge: "side" },
+            { name: "The Beast in Me",                type: "side", note: "Meet Claire at Afterlife — kicks off the full racing questline", badge: "side" },
+            { name: "The Beast in Me: City Center",   type: "side", badge: "side" },
+            { name: "The Beast in Me: Badlands",      type: "side", badge: "side" },
+            { name: "The Beast in Me: Santo Domingo", type: "side", badge: "side" },
+            { name: "The Beast in Me: The Big Race",  type: "side", note: "Final race — choose whether to let Claire get her revenge", badge: "side" },
           ],
         },
         {
@@ -1374,424 +1130,156 @@
           title: "🟡 OPTIONAL — Sinnerman Chain",
           type: "act-side",
           quests: [
-            {
-              name: "Sinnerman",
-              type: "side",
-              note: "⚠ Do NOT kill the prisoner early — let it play out for the full chain",
-              badge: "side",
-            },
-            {
-              name: "There is a Light That Never Goes Out",
-              type: "side",
-              note: "Continuation — Joshua crucifixion questline",
-              badge: "side",
-            },
-            {
-              name: "They Won't Go When I Go",
-              type: "side",
-              note: "Final quest in the Sinnerman chain",
-              badge: "side",
-            },
+            { name: "Sinnerman",                             type: "side", note: "⚠ Do NOT kill the prisoner early — let the conversation play out for the full chain", badge: "side" },
+            { name: "There is a Light That Never Goes Out",  type: "side", note: "The Joshua crucifixion questline continues", badge: "side" },
+            { name: "They Won't Go When I Go",               type: "side", note: "Final quest in the Sinnerman chain", badge: "side" },
           ],
         },
         {
           id: "opt_misc_notable",
-          title: "🟡 OPTIONAL — All Other Side Quests",
+          title: "🟡 OPTIONAL — All Other Notable Side Quests",
           type: "act-side",
           quests: [
-            {
-              name: "Dream On",
-              type: "side",
-              note: "Help Jefferson Peralez — conspiracy mystery in Charter Hill",
-              badge: "side",
-            },
-            {
-              name: "Killing in the Name",
-              type: "side",
-              note: "Help Barry find who's behind the net propaganda",
-              badge: "side",
-            },
-            {
-              name: "Space Oddity",
-              type: "side",
-              note: "★ Reward: Porsche 911 Turbo — follow the con artist chain",
-              badge: "side",
-            },
-            {
-              name: "Sweet Dreams",
-              type: "side",
-              note: "⚠ MISSABLE trap quest — bring a weapon, you will need it",
-              badge: "side",
-            },
-            {
-              name: "Stairway to Heaven",
-              type: "side",
-              note: "Continuation of Sweet Dreams",
-              badge: "side",
-            },
-            {
-              name: "Spellbound",
-              type: "side",
-              note: "Help Nix the netrunner at the Afterlife",
-              badge: "side",
-            },
-            {
-              name: "Poem of the Atoms",
-              type: "side",
-              note: "Continuation of Spellbound — find Nix's stolen book",
-              badge: "side",
-            },
-            {
-              name: "Kold Mirage",
-              type: "side",
-              note: "Find Alt Cunningham's construct — unlock after Transmission",
-              badge: "side",
-            },
-            {
-              name: "Fool on the Hill",
-              type: "side",
-              note: "Meet the fortune teller in the Badlands",
-              badge: "side",
-            },
-            {
-              name: "Violence",
-              type: "side",
-              note: "Help Kerry Eurodyne with a song — starts early Kerry chain",
-              badge: "side",
-            },
-            {
-              name: "Imagine",
-              type: "side",
-              note: "Follow up to Violence — locate the missing singer",
-              badge: "side",
-            },
-            {
-              name: "Stadium Love",
-              type: "side",
-              note: "Shooting gallery challenge at EBM Petrochem Stadium",
-              badge: "side",
-            },
-            {
-              name: "Shoot to Thrill",
-              type: "side",
-              note: "Shooting range challenge in Watson",
-              badge: "side",
-            },
-            {
-              name: "Small Man, Big Mouth",
-              type: "side",
-              note: "Beat up a provocateur for Wakako Okada",
-              badge: "side",
-            },
-            {
-              name: "Big in Japan",
-              type: "side",
-              note: "Help a Corpo employee escape — surprising twist",
-              badge: "side",
-            },
-            {
-              name: "Coin Operated Boy",
-              type: "side",
-              note: "Investigate a missing sexbot — comedic quest in Japantown",
-              badge: "side",
-            },
-            {
-              name: "Machine Gun",
-              type: "side",
-              note: "Help Pepe at the food stand in Heywood",
-              badge: "side",
-            },
-            {
-              name: "Gun Music",
-              type: "side",
-              note: "Help a guitarist named El Capitan in Heywood",
-              badge: "side",
-            },
-            {
-              name: "Raymond Chandler Evening",
-              type: "side",
-              note: "Help a detective in Watson — noir mystery",
-              badge: "side",
-            },
-            {
-              name: "Burning Desire / Night Moves",
-              type: "side",
-              note: "⚠ MISSABLE: Complete before Double Life or this disappears",
-              badge: "side",
-            },
-            {
-              name: "Love Rollercoaster",
-              type: "side",
-              note: "⚠ MISSABLE: Activate the rollercoaster in Pacifica BEFORE Double Life",
-              badge: "side",
-            },
-            {
-              name: "A Day in the Life",
-              type: "side",
-              note: "Help a man in Kabuki — short slice-of-life quest",
-              badge: "side",
-            },
-            {
-              name: "A Cool Metal Fire",
-              type: "side",
-              note: "Help a grieving father in Watson — involves a cyberpsycho",
-              badge: "side",
-            },
-            {
-              name: "The Highwayman",
-              type: "side",
-              note: "★ Reward: iconic motorcycle — find the garage in Rancho Coronado",
-              badge: "side",
-            },
-            {
-              name: "Fortunate Son",
-              type: "side",
-              note: "Help a Valentinos member in Heywood",
-              badge: "side",
-            },
-            {
-              name: "Only Pain",
-              type: "side",
-              note: "Follow up to Fortunate Son",
-              badge: "side",
-            },
-            {
-              name: "Losing My Religion / Sacrum Profanum",
-              type: "side",
-              note: "Help a monk in the Badlands — two-part chain",
-              badge: "side",
-            },
-            {
-              name: "Meetings Along the Edge",
-              type: "side",
-              note: "Continuation of Sacrum Profanum",
-              badge: "side",
-            },
-            {
-              name: "Send in the Clowns",
-              type: "side",
-              note: "Help an ex-Bozos clown near Santo Domingo",
-              badge: "side",
-            },
-            {
-              name: "I'll Fly Away",
-              type: "side",
-              note: "Short emotional quest about a Nomad family in the Badlands",
-              badge: "side",
-            },
-            {
-              name: "Ezekiel Saw the Wheel",
-              type: "side",
-              note: "Panam-adjacent — help Mitch at the Aldecados camp",
-              badge: "side",
-            },
-            {
-              name: "Sex on Wheels",
-              type: "side",
-              note: "Recover a stolen car for Wakako",
-              badge: "side",
-            },
-            {
-              name: "The Prophet's Song",
-              type: "side",
-              note: "Help a street preacher in Pacifica",
-              badge: "side",
-            },
-            {
-              name: "Every Breath You Take",
-              type: "side",
-              note: "Help Judy's friend in the Glen",
-              badge: "side",
-            },
-            {
-              name: "The Gift",
-              type: "side",
-              note: "Receive a mystery package from an unknown sender",
-              badge: "side",
-            },
-            {
-              name: "Venus in Furs",
-              type: "side",
-              note: "Help a doll in Clouds — unlocks after Automatic Love",
-              badge: "side",
-            },
-            {
-              name: "Psycho Killer",
-              type: "side",
-              note: "From Regina Jones — track down all 17 Cyberpsychos across Night City",
-              badge: "side",
-            },
+            { name: "Dream On",                   type: "side", note: "Help Jefferson Peralez — conspiracy mystery in Charter Hill (two-parter with I Smell a Rat)", badge: "side" },
+            { name: "I Smell a Rat",              type: "side", note: "Conclusion of Dream On — the truth behind the Peralez family", badge: "side" },
+            { name: "Killing in the Name",        type: "side", note: "Help Barry expose corporate net propaganda with Nix the netrunner", badge: "side" },
+            { name: "Space Oddity",               type: "side", note: "★ Reward: Porsche 911 Turbo — follow the con artist chain in Santo Domingo", badge: "side" },
+            { name: "Sweet Dreams",               type: "side", note: "⚠ MISSABLE trap quest — bring a weapon, you will wake up without your gear", badge: "side" },
+            { name: "Stairway to Heaven",         type: "side", note: "Immediate follow-up to Sweet Dreams — reclaim what was taken", badge: "side" },
+            { name: "Spellbound",                 type: "side", note: "Help Nix the netrunner track down a stolen book for a client", badge: "side" },
+            { name: "Poem of the Atoms",          type: "side", note: "Continuation of Spellbound — deliver the recovered book", badge: "side" },
+            { name: "Kold Mirage",                type: "side", note: "Find Alt Cunningham's construct in cyberspace — unlocks after Transmission", badge: "side" },
+            { name: "Fool on the Hill",           type: "side", note: "Meet a fortune teller in the Badlands — reflective, lore-rich quest", badge: "side" },
+            { name: "Violence",                   type: "side", note: "Help Kerry Eurodyne with a missing song — unlocks his questline", badge: "side" },
+            { name: "Imagine",                    type: "side", note: "Follow-up to Violence — locate the missing singer", badge: "side" },
+            { name: "Stadium Love",               type: "side", note: "Shooting gallery challenge at EBM Petrochem Stadium", badge: "side" },
+            { name: "Shoot to Thrill",            type: "side", note: "Shooting range challenge in Watson", badge: "side" },
+            { name: "Small Man, Big Mouth",       type: "side", note: "Beat up a provocateur for fixer Wakako Okada", badge: "side" },
+            { name: "Big in Japan",               type: "side", note: "Help a Corpo employee escape corporate control — surprising ending", badge: "side" },
+            { name: "Coin Operated Boy",          type: "side", note: "Investigate a missing sexbot — comedic quest in Japantown", badge: "side" },
+            { name: "Machine Gun",                type: "side", note: "Help Pepe at his food stand in Heywood", badge: "side" },
+            { name: "Gun Music",                  type: "side", note: "Help guitarist El Capitan protect his corner in Heywood", badge: "side" },
+            { name: "Raymond Chandler Evening",   type: "side", note: "Help a detective in Watson — classic noir mystery style", badge: "side" },
+            { name: "Burning Desire / Night Moves",type: "side", note: "⚠ MISSABLE: Complete before Double Life or the quest disappears permanently", badge: "side" },
+            { name: "Love Rollercoaster",         type: "side", note: "⚠ MISSABLE: Activate the rollercoaster in Pacifica BEFORE completing Double Life", badge: "side" },
+            { name: "A Day in the Life",          type: "side", note: "Help a man in Kabuki — short slice-of-life story", badge: "side" },
+            { name: "A Cool Metal Fire",          type: "side", note: "Help a grieving father in Watson — involves a cyberpsycho", badge: "side" },
+            { name: "The Highwayman",             type: "side", note: "★ Reward: iconic Arch motorcycle — find the garage in Rancho Coronado", badge: "side" },
+            { name: "Fortunate Son",              type: "side", note: "Help a Valentinos member in Heywood", badge: "side" },
+            { name: "Only Pain",                  type: "side", note: "Follow-up to Fortunate Son", badge: "side" },
+            { name: "Losing My Religion / Sacrum Profanum", type: "side", note: "Help a monk escape his past in the Badlands — two-part chain", badge: "side" },
+            { name: "Meetings Along the Edge",    type: "side", note: "Continuation of Sacrum Profanum", badge: "side" },
+            { name: "Send in the Clowns",         type: "side", note: "Help an ex-Bozos clown near Santo Domingo", badge: "side" },
+            { name: "I'll Fly Away",              type: "side", note: "Short emotional quest about a Nomad family in the Badlands", badge: "side" },
+            { name: "Ezekiel Saw the Wheel",      type: "side", note: "Panam-adjacent — help Mitch at the Aldecados camp", badge: "side" },
+            { name: "Sex on Wheels",              type: "side", note: "Recover a stolen car for fixer Wakako Okada", badge: "side" },
+            { name: "The Prophet's Song",         type: "side", note: "Help a street preacher in Pacifica", badge: "side" },
+            { name: "Every Breath You Take",      type: "side", note: "Help a woman in The Glen — Judy connection", badge: "side" },
+            { name: "The Gift",                   type: "side", note: "Receive a mystery package from an anonymous sender", badge: "side" },
+            { name: "Venus in Furs",              type: "side", note: "Help a doll in Clouds — unlocks after Automatic Love", badge: "side" },
+            { name: "Psycho Killer",              type: "side", note: "From Regina Jones — track and neutralize all 17 Cyberpsychos across Night City", badge: "side" },
           ],
         },
         {
           id: "opt_pl_side",
-          title:
-            "🟣 OPTIONAL — Phantom Liberty Side Quests (Do During / After DLC)",
+          title: "🟣 OPTIONAL — Phantom Liberty Side Quests",
           type: "act-dlc",
           quests: [
-            {
-              name: "Baby Let Me Take You",
-              type: "dlc",
-              note: "Help a man find his kidnapped partner in Dogtown",
-              badge: "dlc",
-            },
-            {
-              name: "Dazed and Confused",
-              type: "dlc",
-              note: "Rescue a confused merc in Dogtown",
-              badge: "dlc",
-            },
-            {
-              name: "Dirty Second Hands",
-              type: "dlc",
-              note: "Arms deal gone wrong in the stadium",
-              badge: "dlc",
-            },
-            {
-              name: "Balls to the Wall",
-              type: "dlc",
-              note: "Help a desperate man retrieve stolen goods",
-              badge: "dlc",
-            },
-            {
-              name: "Hi Ho Silver Lining",
-              type: "dlc",
-              note: "Fight club quest in Dogtown",
-              badge: "dlc",
-            },
-            {
-              name: "Just Another Story",
-              type: "dlc",
-              note: "Help a journalist uncover a story in Dogtown",
-              badge: "dlc",
-            },
-            {
-              name: "Money for Nothing",
-              type: "dlc",
-              note: "Scam operation — follow the money trail",
-              badge: "dlc",
-            },
-            {
-              name: "Moving Heat",
-              type: "dlc",
-              note: "Help transport a dangerous package through Dogtown",
-              badge: "dlc",
-            },
-            {
-              name: "New Person, Same Old Mistakes",
-              type: "dlc",
-              note: "Help a rogue AI in Dogtown — emotional quest",
-              badge: "dlc",
-            },
-            {
-              name: "No Easy Way Out",
-              type: "dlc",
-              note: "Help an underground fighter escape their contract",
-              badge: "dlc",
-            },
-            {
-              name: "Push It to the Limit",
-              type: "dlc",
-              note: "Racing quest in Dogtown with Mr. Hands",
-              badge: "dlc",
-            },
-            {
-              name: "Shot By Both Sides",
-              type: "dlc",
-              note: "Political intrigue involving rival factions in Dogtown",
-              badge: "dlc",
-            },
+            { name: "Baby Let Me Take You",   type: "dlc", note: "Help a man find his kidnapped partner somewhere in Dogtown", badge: "dlc" },
+            { name: "Dazed and Confused",     type: "dlc", note: "Rescue a disoriented merc wandering Dogtown", badge: "dlc" },
+            { name: "Dirty Second Hands",     type: "dlc", note: "Intercept a shady arms deal inside the stadium", badge: "dlc" },
+            { name: "Balls to the Wall",      type: "dlc", note: "Help a desperate man retrieve stolen goods from Dogtown gangers", badge: "dlc" },
+            { name: "Hi Ho Silver Lining",    type: "dlc", note: "Underground fight club quest in Dogtown", badge: "dlc" },
+            { name: "Just Another Story",     type: "dlc", note: "Help a journalist uncover a story buried deep in Dogtown", badge: "dlc" },
+            { name: "Money for Nothing",      type: "dlc", note: "Follow a money trail through a Dogtown scam operation", badge: "dlc" },
+            { name: "Moving Heat",            type: "dlc", note: "Transport a dangerous package through Dogtown's checkpoints", badge: "dlc" },
+            { name: "New Person, Same Old Mistakes", type: "dlc", note: "Help a rogue AI navigate its identity — one of PL's most emotional side quests", badge: "dlc" },
+            { name: "No Easy Way Out",        type: "dlc", note: "Help an underground fighter escape their Dogtown contract", badge: "dlc" },
+            { name: "Push It to the Limit",   type: "dlc", note: "Racing quest in Dogtown — arranged by Mr. Hands", badge: "dlc" },
+            { name: "Shot By Both Sides",     type: "dlc", note: "Navigate political intrigue between rival factions in Dogtown", badge: "dlc" },
           ],
         },
+
+        // ── POINT OF NO RETURN ────────────────────────────────────────────────
         {
           id: "ponr",
-          title: "⚠ POINT OF NO RETURN — DO EVERYTHING ABOVE FIRST",
+          title: "⚠ POINT OF NO RETURN — COMPLETE EVERYTHING ABOVE FIRST",
           type: "act-warning",
           quests: [
             {
-              name: "🔴 Nocturne Op55N1 (THE POINT OF NO RETURN)",
+              name: "🔴 Nocturne Op55N1 (POINT OF NO RETURN)",
               type: "warning",
-              note: "CRITICAL: Once you enter Embers restaurant elevator, ALL unfinished side quests FAIL permanently. Save beforehand!",
+              note: "CRITICAL: Entering the Embers restaurant elevator permanently fails ALL active side quests. Hard save here. The choices on Misty's balcony determine which endings are available.",
               badge: "key",
             },
           ],
         },
+
+        // ── ACT 3 — ENDINGS ───────────────────────────────────────────────────
         {
-          id: "act3johnny",
-          title: "⑬ ACT 3 — ENDING: THE SUN (Johnny + Rogue)",
+          id: "act3sun",
+          title: "⑫ ACT 3 — THE SUN ENDING (Johnny + Rogue)",
           type: "act-main",
           quests: [
-            {
-              name: "For Whom the Bell Tolls",
-              type: "main",
-              note: "REQUIRES: Chippin' In + Blistering Love + 60% Johnny relationship",
-              badge: "main",
-            },
-            { name: "Knockin' On Heaven's Door", type: "main", badge: "main" },
-            {
-              name: "New Dawn Fades",
-              type: "main",
-              note: "🏁 ENDING",
-              badge: "main",
-            },
+            { name: "For Whom the Bell Tolls", type: "main", note: "REQUIRES: Chippin' In + Blistering Love. Call Rogue from Misty's balcony.", badge: "main" },
+            { name: "Knockin' On Heaven's Door", type: "main", note: "Storm Arasaka Tower with Rogue and Johnny — final assault", badge: "main" },
+            { name: "Path of Glory", type: "main", note: "🏁 ENDING — V becomes a legend of Night City. Johnny stays in cyberspace.", badge: "main" },
+          ],
+        },
+        {
+          id: "act3reaper",
+          title: "⑫ ACT 3 — DON'T FEAR THE REAPER (Secret Solo Ending)",
+          type: "act-main",
+          quests: [
+            { name: "Don't Fear the Reaper", type: "main", note: "REQUIRES: Chippin' In + Blistering Love + A Like Supreme + Holdin' On + 70% Johnny relationship. On Misty's balcony: choose Rogue option, then WAIT — Johnny will offer to go alone.", badge: "key" },
+            { name: "For Whom the Bell Tolls", type: "main", note: "Solo run — V and Johnny storm Arasaka Tower without allies", badge: "main" },
+            { name: "Knockin' On Heaven's Door", type: "main", note: "Final tower assault — harder solo", badge: "main" },
+            { name: "New Dawn Fades", type: "main", note: "🏁 ENDING — Johnny takes V's body. V's engram goes to cyberspace.", badge: "main" },
           ],
         },
         {
           id: "act3panam",
-          title:
-            "⑬ ACT 3 — ENDING: ALL ALONG THE WATCHTOWER (Panam + Aldecados)",
+          title: "⑫ ACT 3 — ALL ALONG THE WATCHTOWER (Panam + Aldecados)",
           type: "act-main",
           quests: [
-            {
-              name: "We Gotta Live Together",
-              type: "main",
-              note: "REQUIRES: Queen of the Highway completed",
-              badge: "main",
-            },
-            { name: "Forward to Death", type: "main", badge: "main" },
-            { name: "Belly of the Beast", type: "main", badge: "main" },
-            {
-              name: "All Along the Watchtower",
-              type: "main",
-              note: "🏁 ENDING",
-              badge: "main",
-            },
+            { name: "We Gotta Live Together",  type: "main", note: "REQUIRES: Queen of the Highway completed. Call Panam from Misty's balcony.", badge: "main" },
+            { name: "Forward to Death",        type: "main", note: "The Aldecados mobilize and drive to Night City", badge: "main" },
+            { name: "Belly of the Beast",      type: "main", note: "Enter the Arasaka facility using the Basilisk tank", badge: "main" },
+            { name: "All Along the Watchtower",type: "main", note: "🏁 ENDING — V leaves Night City with the Aldecados. Johnny stays in cyberspace.", badge: "main" },
           ],
         },
         {
-          id: "act3takemura",
-          title: "⑬ ACT 3 — ENDING: WHERE IS MY MIND? (Arasaka / Hanako)",
+          id: "act3arasaka",
+          title: "⑫ ACT 3 — WHERE IS MY MIND? (Arasaka / Hanako — The Devil)",
           type: "act-main",
           quests: [
-            {
-              name: "Last Caress",
-              type: "main",
-              note: "REQUIRES: Search and Destroy + saved Takemura",
-              badge: "main",
-            },
-            { name: "Totalimmortal", type: "main", badge: "main" },
-            {
-              name: "Where Is My Mind?",
-              type: "main",
-              note: "🏁 ENDING",
-              badge: "main",
-            },
+            { name: "Last Caress",     type: "main", note: "REQUIRES: Search and Destroy + Takemura saved. Accept Hanako's offer from Misty's balcony.", badge: "main" },
+            { name: "Totalimmortal",   type: "main", note: "Infiltrate Arasaka Tower with Hanako's help via a back-channel entrance", badge: "main" },
+            { name: "Belly of the Beast", type: "main", note: "Reach the core of Arasaka HQ — navigate Mikoshi", badge: "main" },
+            { name: "Where Is My Mind?",  type: "main", note: "🏁 ENDING — V joins Arasaka's Secure Your Soul program, or returns to Earth with months to live.", badge: "main" },
           ],
         },
         {
-          id: "act3alone",
-          title: "⑬ ACT 3 — ENDING: PATH OF GLORY (Solo / No Allies)",
+          id: "act3pl_reed",
+          title: "⑫ ACT 3 — SO IT GOES: REED PATH (Phantom Liberty Ending)",
           type: "act-main",
           quests: [
-            {
-              name: "Path of Glory",
-              type: "main",
-              note: "🏁 ENDING — Secret ending. No questline requirements!",
-              badge: "main",
-            },
+            { name: "Who Holds the World", type: "main", note: "REQUIRES: Who Wants to Live Forever (Reed path) completed. Songbird's cure tech becomes the basis for V's treatment.", badge: "key" },
+            { name: "🏁 Ending: Reed Path", type: "main", note: "V gets the cure — but at a steep personal cost. This is a new ending added by Phantom Liberty.", badge: "main" },
           ],
         },
+        {
+          id: "act3pl_songbird",
+          title: "⑫ ACT 3 — SO IT GOES: SONGBIRD PATH (Phantom Liberty Ending)",
+          type: "act-main",
+          quests: [
+            { name: "Who Holds the World", type: "main", note: "REQUIRES: Through Pain to Heaven (Songbird path) completed. So Mi's sacrifice grants V access to the cure.", badge: "key" },
+            { name: "🏁 Ending: Songbird Path", type: "main", note: "V gets the cure via Songbird's sacrifice — a bittersweet conclusion to the PL storyline.", badge: "main" },
+          ],
+        },
+
       ];
+
 
       const CATEGORY_DEFS = [
         {
@@ -1890,6 +1378,38 @@
           document.getElementById("statPct").textContent = pct + "%";
 
           this.renderStats();
+          this.updateSectionTags();
+        },
+
+        updateSectionTags() {
+          QUEST_DATA.forEach((sec) => {
+            const header = document.getElementById(`header_${sec.id}`);
+            if (!header) return;
+
+            // count only checkable quests (skip type=warning)
+            const checkable = sec.quests.filter(q => q.type !== "warning");
+            if (checkable.length === 0) return;
+
+            const allDone = checkable.every((q, i) => {
+              // find the true index in sec.quests (warning items shift indices)
+              const trueIdx = sec.quests.indexOf(q);
+              return !!this.completed[`${sec.id}_${trueIdx}`];
+            });
+
+            header.classList.toggle("is-complete", allDone);
+
+            // update the count label
+            const doneInSection = checkable.filter((q) => {
+              const trueIdx = sec.quests.indexOf(q);
+              return !!this.completed[`${sec.id}_${trueIdx}`];
+            }).length;
+            const countEl = document.getElementById(`count_${sec.id}`);
+            if (countEl) {
+              countEl.textContent = allDone
+                ? `${checkable.length}/${checkable.length}`
+                : `${doneInSection}/${checkable.length}`;
+            }
+          });
         },
 
         renderStats() {
@@ -1938,10 +1458,13 @@
 
             const header = document.createElement("div");
             header.className = `section-header ${sec.type}`;
+            header.id = `header_${sec.id}`;
+            header.dataset.section = sec.id;
             header.onclick = () => toggleSection(sec.id);
             header.innerHTML = `
         <span class="section-title">${sec.title}</span>
-        <span class="section-count">${sec.quests.length}</span>
+        <span class="section-done-tag">DONE</span>
+        <span class="section-count" id="count_${sec.id}">${sec.quests.length}</span>
         <span class="section-toggle ${sec.id.startsWith("opt") ? "" : "open"}" id="toggle_${sec.id}">▶</span>
       `;
             sectionEl.appendChild(header);
